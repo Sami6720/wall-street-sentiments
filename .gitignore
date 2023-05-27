@@ -1,0 +1,21 @@
+# top_stock_data_extractor
+workflows/extractors/top_stock_data_extractor/__pycache__
+workflows/extractors/top_stock_data_extractor/.env
+workflows/extractors/top_stock_data_extractor/test.ipynb
+
+# top_stock_label_extractor
+workflows/extractors/top_stock_label_extractor/__pycache__
+workflows/extractors/top_stock_label_extractor/.env
+workflows/extractors/top_stock_label_extractor/test.ipynb
+
+# experimentation/notebooks
+experimentation/notebooks/__pycache__
+
+# deployments folder
+deployments
+
+# virtual environment
+.venv
+
+# vs-code
+.vscode
