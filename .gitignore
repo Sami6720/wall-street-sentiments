@@ -10,6 +10,7 @@ workflows/extractors/top_stocks_opening_closing_prices_extractor/test.ipynb
 
 # experimentation/notebooks
 experimentation/notebooks/__pycache__
+experimentation/notebooks/.env
 
 # deployments folder
 deployments
