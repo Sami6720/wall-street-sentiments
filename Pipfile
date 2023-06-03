@@ -12,6 +12,9 @@ beautifulsoup4 = "*"
 boto3 = "*"
 pytz = "*"
 python-dotenv = "*"
+matplotlib = "*"
+scikit-learn = "*"
+seaborn = "*"
 
 [dev-packages]
 
