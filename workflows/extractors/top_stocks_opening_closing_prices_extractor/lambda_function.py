@@ -1,5 +1,5 @@
 from datetime import datetime
-from get_top_stocks_opening_closing_prices import get_top_stocks_opening_closing_prices
+from top_stocks_opening_closing_prices_extractor import get_top_stocks_opening_closing_prices
 import pandas as pd
 import boto3
 from config import Config
@@ -25,7 +25,7 @@ def lambda_handler(event, context):
     timezone = pytz.timezone('America/New_York')
     current_time = datetime.now(timezone)
     today = current_time.strftime('%m-%d-%Y')
-    filename = f'top_stocks_info_{today}.csv'
+    filename = f'extracted_data/top_stocks_info/top_stocks_info_{today}.csv'
     obj = s3_client.get_object(
         Bucket=BUCKET_NAME, Key=filename)
     top_stocks_info_df = pd.read_csv(obj['Body'])
@@ -34,6 +34,6 @@ def lambda_handler(event, context):
         top_stock_tickers, FINHUB_API_KEY)
 
     # save top_stocks_opening_closing_prices_df as csv and to s3
-    key = f'top_stocks_opening_closing_prices_{today}.csv'
+    key = f'extracted_data/top_stocks_opening_closing_prices/top_stocks_opening_closing_prices_{today}.csv'
     s3_client.put_object(Bucket=BUCKET_NAME, Key=key,
                          Body=top_stocks_opening_closing_prices_df.to_csv(index=False))
