@@ -1,12 +1,12 @@
 
 from datetime import datetime
 from config import Config
-from get_top_stocks_raw_reddit_sentiment_info import get_top_stocks_raw_reddit_sentiment_info
-from get_top_stocks_mentioning_user_counts import get_top_stocks_mentioning_user_counts
-from get_top_stocks_fundamentals_df import get_top_stocks_fundamentals_df
-from get_top_stocks_sentiments_only import get_top_stocks_sentiments_only
-from get_top_stock_tickers import get_top_stock_tickers
-from create_top_stock_info_df import create_top_stock_info_df
+from top_stock_data_extractor import get_top_stocks_raw_reddit_sentiment_info, \
+    get_top_stocks_mentioning_user_counts, \
+    get_top_stocks_fundamentals_df, \
+    get_top_stocks_sentiments_only, \
+    get_top_stock_tickers, \
+    create_top_stock_info_df
 import boto3
 import pytz
 
@@ -46,9 +46,3 @@ def lambda_handler(event, context):
     key = f'extracted_data/top_stocks_info/top_stocks_info_{today}.csv'
     s3.put_object(Bucket=BUCKET_NAME, Key=key,
                   Body=top_stock_info_df.to_csv(index=False))
-
-    # return top_stock_info_df
-
-
-if __name__ == '__main__':
-    lambda_handler({}, {})
