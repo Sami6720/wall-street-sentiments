@@ -43,8 +43,12 @@ def lambda_handler(event, context):
 
     # boto3 to put csv into S3 with today's date as filename (mm/dd/yyyy)
     s3 = boto3.client('s3')
-    key = f'top_stocks_info_{today}.csv'
+    key = f'extracted_data/top_stocks_info/top_stocks_info_{today}.csv'
     s3.put_object(Bucket=BUCKET_NAME, Key=key,
                   Body=top_stock_info_df.to_csv(index=False))
 
     # return top_stock_info_df
+
+
+if __name__ == '__main__':
+    lambda_handler({}, {})
