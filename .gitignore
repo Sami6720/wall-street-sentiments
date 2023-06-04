@@ -8,6 +8,10 @@ workflows/extractors/top_stocks_opening_closing_prices_extractor/__pycache__
 workflows/extractors/top_stocks_opening_closing_prices_extractor/.env
 workflows/extractors/top_stocks_opening_closing_prices_extractor/test.ipynb
 
+# transformers
+workflows/transformers/__pycache__
+workflows/transformers/.env
+
 # experimentation/notebooks
 experimentation/notebooks/__pycache__
 experimentation/notebooks/.env
