@@ -11,6 +11,7 @@ workflows/extractors/top_stocks_opening_closing_prices_extractor/test.ipynb
 # transformers
 workflows/transformers/__pycache__
 workflows/transformers/.env
+workflows/transformers/test.ipynb
 
 # experimentation/notebooks
 experimentation/notebooks/__pycache__
