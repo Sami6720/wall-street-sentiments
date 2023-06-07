@@ -22,7 +22,7 @@ def get_top_stocks_opening_closing_prices(top_stock_tickers: list, today: str,
                 f'https://finnhub.io/api/v1/quote?symbol={stock}&token={FINNHUB_API_KEY}',
                 timeout=60).json()
             stock_opening_closing_price = {
-                "timestamp": today, "stock": stock,
+                "timestamp": today, "ticker": stock,
                 "opening_price": data['o'], "closing_price": data['c']}
             stock_prices_list.append(stock_opening_closing_price)
         except Exception as e:
