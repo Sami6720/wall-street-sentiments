@@ -31,7 +31,7 @@ def lambda_handler(event, context):
     top_stocks_info_df = pd.read_csv(obj['Body'])
     top_stock_tickers = list(top_stocks_info_df['ticker'])
     top_stocks_opening_closing_prices_df = get_top_stocks_opening_closing_prices(
-        top_stock_tickers, FINHUB_API_KEY)
+        top_stock_tickers, today, FINHUB_API_KEY)
 
     # save top_stocks_opening_closing_prices_df as csv and to s3
     key = f'extracted_data/top_stocks_opening_closing_prices/top_stocks_opening_closing_prices_{today}.csv'
