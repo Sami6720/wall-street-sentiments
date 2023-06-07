@@ -2,13 +2,15 @@ import requests
 import pandas as pd
 
 
-def get_top_stocks_opening_closing_prices(top_stock_tickers: list, FINNHUB_API_KEY: str) -> pd.DataFrame:
+def get_top_stocks_opening_closing_prices(top_stock_tickers: list, today: str,
+                                          FINNHUB_API_KEY: str) -> pd.DataFrame:
     """Get current stock price for the list of stock tickers.
 
     param: top_stock_tickers
     type: list
-
     param: FINNHUB_API_KEY
+    type: str
+    today: timestamp,
     type: str
 
     return: top_stocks_opening_closing_prices_df
@@ -20,7 +22,8 @@ def get_top_stocks_opening_closing_prices(top_stock_tickers: list, FINNHUB_API_K
                 f'https://finnhub.io/api/v1/quote?symbol={stock}&token={FINNHUB_API_KEY}',
                 timeout=60).json()
             stock_opening_closing_price = {
-                "stock": stock, "opening_price": data['o'],  "closing_price": data['c']}
+                "timestamp": today, "ticker": stock,
+                "opening_price": data['o'], "closing_price": data['c']}
             stock_prices_list.append(stock_opening_closing_price)
         except Exception as e:
             print(f"For stock {stock} the error is {e}")
