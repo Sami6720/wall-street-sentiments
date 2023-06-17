@@ -1,7 +1,6 @@
 from datetime import datetime
 import boto3
 from config import Config
-import pandas as pd
 import pytz
 from top_stocks_raw_data_enrichment_transformer import create_target_column, \
     create_new_feature_columns, \
