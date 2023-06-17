@@ -103,6 +103,10 @@ def merge_dataframes(
     return: Dataframe with merged dataframes.
     rtype: pd.DataFrame
     """
+    new_extracted_data_exists = len(top_stocks_info_dfs) != 0
+
+    if not new_extracted_data_exists:
+        return pd.DataFrame()
 
     top_stock_info_dfs_concatanated = pd.concat(top_stocks_info_dfs,
                                                 axis=0, ignore_index=True)

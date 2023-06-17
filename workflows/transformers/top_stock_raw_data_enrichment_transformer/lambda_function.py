@@ -42,7 +42,10 @@ def lambda_handler(event, context) -> None:
         dates_not_transformed, 'top_stocks_opening_closing_prices', BUCKET_NAME)
 
     data = merge_dataframes(top_stocks_info_dfs,
-                             top_stocks_opening_closing_prices_dfs)
+                            top_stocks_opening_closing_prices_dfs)
+
+    if data.empty:
+        return
 
     data = rename_columns(data)
     data = create_target_column(data)
