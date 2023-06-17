@@ -55,7 +55,3 @@ def lambda_handler(event, context) -> None:
     key = f'transformed_data/top_stocks_raw_data_enriched/transformed_data_{today}.csv'
     s3.put_object(Bucket=BUCKET_NAME, Key=key,
                   Body=data.to_csv(index=False))
-
-
-if __name__ == '__main__':
-    lambda_handler({}, {})
