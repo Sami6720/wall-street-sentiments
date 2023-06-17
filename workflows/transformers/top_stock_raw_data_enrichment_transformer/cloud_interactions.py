@@ -61,10 +61,15 @@ def get_dates_not_transformed(last_date_in_transformed_data,
     if not last_date_in_transformed_data:
         return file_dates_in_extracted_data
 
+    last_date_in_transformed_data_dt = datetime.strptime(
+        last_date_in_transformed_data, "%m-%d-%Y").date()
     dates_not_transformed = []
-    for date in file_dates_in_extracted_data:
-        if datetime.strptime(date, "%m-%d-%Y").date() > datetime.strptime(last_date_in_transformed_data, "%m-%d-%Y").date():
-            dates_not_transformed.append(date)
+    for extracted_date in file_dates_in_extracted_data:
+        extracted_date_dt = datetime.strptime(
+            extracted_date, "%m-%d-%Y").date()
+        if extracted_date_dt > last_date_in_transformed_data_dt:
+            dates_not_transformed.append(extracted_date)
+
     return dates_not_transformed
 
 
