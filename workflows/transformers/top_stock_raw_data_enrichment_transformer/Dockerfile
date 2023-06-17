@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 CMD [ "lambda_function.lambda_handler" ]`
 
 # BUILD COMMAND
-# docker buildx build -t transformer: . --build-context piplock=../../../
+# docker buildx build -t top_stock_raw_data_enrichment_transformer:tag . --build-context piplock=../../../
