@@ -3,7 +3,7 @@ import boto3
 from config import Config
 import pandas as pd
 import pytz
-from top_stock_raw_data_enrichment_transformer import create_target_column, \
+from top_stocks_raw_data_enrichment_transformer import create_target_column, \
     create_new_feature_columns, \
     impute_values_in_columns, \
     rename_columns, merge_dataframes
