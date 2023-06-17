@@ -36,11 +36,11 @@ def create_new_feature_columns(data: pd.DataFrame) -> pd.DataFrame:
     data['dividend_exists'] = data['dividend_yield_annual'
                                    ].apply(lambda x: 1
                                            if x > 0 else 0)
-    data['change_in_rank'] = (
+    data['rank_percentage_change_24h'] = (
         (data['rank'] - data['rank_24h_ago']) /
         data['rank_24h_ago']
     )
-    data['change_in_mentions'] = (
+    data['mentions_percentage_change_24h'] = (
         (data['mentions'] - data['mentions_24h_ago']) /
         data['mentions_24h_ago']
     )
