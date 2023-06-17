@@ -33,7 +33,7 @@ def lambda_handler(event, context) -> None:
     file_dates_in_extracted_data = set(get_file_dates_in_s3_folder(
         BUCKET_NAME, 'extracted_data/top_stocks_info'))
     last_date_in_transformed_data = max(get_file_dates_in_s3_folder(
-        BUCKET_NAME, 'transformed_data'), default=None)
+        BUCKET_NAME, 'transformed_data/top_stock_raw_data_enriched'), default=None)
     dates_not_transformed = get_dates_not_transformed(
         last_date_in_transformed_data, file_dates_in_extracted_data)
     top_stocks_info_dfs = get_data_frames_from_extraction_folders(
@@ -54,7 +54,7 @@ def lambda_handler(event, context) -> None:
     data = impute_values_in_columns(data)
 
     s3 = boto3.client('s3')
-    key = f'transformed_data/transformed_data_{today}.csv'
+    key = f'transformed_data/top_stock_raw_data_enriched/transformed_data_{today}.csv'
     s3.put_object(Bucket=BUCKET_NAME, Key=key,
                   Body=data.to_csv(index=False))
 
