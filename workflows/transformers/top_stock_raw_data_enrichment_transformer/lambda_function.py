@@ -6,7 +6,7 @@ import pytz
 from top_stock_raw_data_enrichment_transformer import create_target_column, \
     create_new_feature_columns, \
     impute_values_in_columns, \
-    rename_columns
+    rename_columns, merge_dataframes
 from cloud_interactions import get_file_dates_in_s3_folder, \
     get_dates_not_transformed, \
     get_data_frames_from_extraction_folders
@@ -40,13 +40,9 @@ def lambda_handler(event, context) -> None:
         dates_not_transformed, 'top_stocks_info', BUCKET_NAME)
     top_stocks_opening_closing_prices_dfs = get_data_frames_from_extraction_folders(
         dates_not_transformed, 'top_stocks_opening_closing_prices', BUCKET_NAME)
-    top_stock_info_dfs_concatanated = pd.concat(top_stocks_info_dfs,
-                                                axis=0, ignore_index=True)
-    top_stocks_opening_closing_prices_dfs_concatanated = pd.concat(
-        top_stocks_opening_closing_prices_dfs, axis=0, ignore_index=True)
-    data = pd.merge(left=top_stock_info_dfs_concatanated,
-                    right=top_stocks_opening_closing_prices_dfs_concatanated,
-                    on=['timestamp', 'ticker']).sort_values(by='timestamp')
+
+    data = merge_dataframes(top_stocks_info_dfs,
+                             top_stocks_opening_closing_prices_dfs)
 
     data = rename_columns(data)
     data = create_target_column(data)

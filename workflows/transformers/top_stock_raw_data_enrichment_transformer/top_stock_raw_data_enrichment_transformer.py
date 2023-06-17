@@ -88,3 +88,28 @@ def rename_columns(data: pd.DataFrame) -> pd.DataFrame:
     )
 
     return data
+
+
+def merge_dataframes(
+        top_stocks_info_dfs: list,
+        top_stocks_opening_closing_prices_dfs: list) -> pd.DataFrame:
+    """Merge dataframes
+
+    param top_stocks_info_dfs: List of dataframes of top stocks info.
+    type: list
+    param top_stocks_opening_closing_prices_dfs: List of dataframes of top stocks opening and closing prices.
+    type: list
+
+    return: Dataframe with merged dataframes.
+    rtype: pd.DataFrame
+    """
+
+    top_stock_info_dfs_concatanated = pd.concat(top_stocks_info_dfs,
+                                                axis=0, ignore_index=True)
+    top_stocks_opening_closing_prices_dfs_concatanated = pd.concat(
+        top_stocks_opening_closing_prices_dfs, axis=0, ignore_index=True)
+    data = pd.merge(left=top_stock_info_dfs_concatanated,
+                    right=top_stocks_opening_closing_prices_dfs_concatanated,
+                    on=['timestamp', 'ticker']).sort_values(by='timestamp')
+
+    return data
