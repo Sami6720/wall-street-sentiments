@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 
 
-def create_target_column(data: pd.DataFrame) -> pd.DataFrame:
-    """Create target column
+def create_label_column(data: pd.DataFrame) -> pd.DataFrame:
+    """Create label column
 
     param data: Dataframe of to be labelled.
     type: pd.DataFrame
@@ -35,6 +35,6 @@ def label_data(
     data = pd.merge(left=top_stocks_info_extracted,
                     right=top_stocks_prices_extracted,
                     on=['timestamp', 'ticker']).sort_values(by='timestamp')
-    data = create_target_column(data)
+    data = create_label_column(data)
 
     return data
