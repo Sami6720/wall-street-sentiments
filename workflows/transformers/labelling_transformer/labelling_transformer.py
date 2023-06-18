@@ -12,9 +12,9 @@ def create_target_column(data: pd.DataFrame) -> pd.DataFrame:
     rtype: pd.DataFrame
     """
 
-    data['target'] = (data['closing_price'] -
-                      data['opening_price']
-                      ).apply(lambda x: 1 if x > 0 else 0)
+    data['label'] = (data['closing_price'] -
+                     data['opening_price']
+                     ).apply(lambda x: 1 if x > 0 else 0)
     return data
 
 
