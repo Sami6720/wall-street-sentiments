@@ -11,6 +11,10 @@ def get_data_from_s3(bucket_name: str, data_path_prefix: str,
     type: str
     param data_path_prefix: Path prefix to data.
     type: str
+    param today: Today's date.
+    type: str
+    param data_type: Type of data.
+    type: str
 
     return: Fetched data.
     rtype: pd.DataFrame
