@@ -3,22 +3,25 @@ import botocore
 import pandas as pd
 
 
-def get_extracted_data(today: str, bucket_name: str, extracted_data_path_prefix: str) -> pd.DataFrame:
-    """Get extracted data
+def get_data_from_s3(bucket_name: str, data_path_prefix: str,
+                     today: str, data_type: str) -> pd.DataFrame:
+    """Get data from S3
 
-    param today: Today's date.
-    type: str
     param bucket_name: Name of S3 bucket.
     type: str
-    param extracted_data_path_prefix: Path prefix to extracted data.
+    param data_path_prefix: Path prefix to data.
+    type: str
+    param today: Today's date.
+    type: str
+    param data_type: Type of data.
     type: str
 
-    return: Dataframe of extracted data.
+    return: Fetched data.
     rtype: pd.DataFrame
     """
 
     s3 = boto3.client('s3')
-    key = f'{extracted_data_path_prefix}/top_stocks_info_{today}.csv'
+    key = f'{data_path_prefix}/{data_type}_{today}.csv'
     try:
         obj = s3.get_object(Bucket=bucket_name, Key=key)
         extracted_data = pd.read_csv(obj['Body'])
@@ -27,24 +30,25 @@ def get_extracted_data(today: str, bucket_name: str, extracted_data_path_prefix:
         raise error
 
 
-def upload_preprocessed_data(preprocessed_data: pd.DataFrame, today: str,
-                             bucket_name: str, preprocessed_destination_path_prefix: str) -> None:
-    """Upload preprocessed data
+def upload_data_to_s3(bucket_name: str, destination_prefix: str,
+                      data: pd.DataFrame, today: str, data_type: str) -> None:
+    """Upload data to S3
 
-    param preprocessed_data: Dataframe of preprocessed data.
+    param bucket_name: Name of S3 bucket.
+    type: str
+    param destination_prefix: Path prefix to data.
+    type: str
+    param data: Data to be uploaded.
     type: pd.DataFrame
     param today: Today's date.
     type: str
-    param bucket_name: Name of S3 bucket.
-    type: str
-    param preprocessed_destination_path_prefix: Path prefix to preprocessed data.
+    param data_type: Type of data.
     type: str
 
     return: None
-    rtype: None
     """
 
     s3 = boto3.client('s3')
-    key = f'{preprocessed_destination_path_prefix}/preprocessed_data_{today}.csv'
+    key = f'{destination_prefix}/{data_type}_{today}.csv'
     s3.put_object(Bucket=bucket_name, Key=key,
-                  Body=preprocessed_data.to_csv(index=False))
+                  Body=data.to_csv(index=False))
