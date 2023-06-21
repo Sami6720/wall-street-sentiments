@@ -15,6 +15,7 @@ python-dotenv = "*"
 matplotlib = "*"
 scikit-learn = "*"
 seaborn = "*"
+xgboost = "*"
 
 [dev-packages]
 
