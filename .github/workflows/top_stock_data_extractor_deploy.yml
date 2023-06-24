@@ -3,7 +3,7 @@ name: top_stock_data_extractor_deploy
 on:
   push:
     branches:
-      - "master"
+      - "dev"
     paths:
       - "workflows/extractors/top_stock_data_extractor/**"
 
