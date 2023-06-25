@@ -45,11 +45,11 @@ jobs:
           TOP_STOCKS_PRICES_EXTRACTED_PREFIX: ${{ secrets.TOP_STOCKS_PRICES_EXTRACTED_PREFIX }}
           LABELLED_DATA_DESTINATION_PREFIX: ${{ secrets.LABELLED_DATA_DESTINATION_PREFIX }}
         run: |
-          # Change to the top_stocks_opening_closing_prices_extractor directory.
+          # Change to the labelling_transformer directory.
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to lamba-function.
-          cd workflows/extractors/top_stocks_opening_closing_prices_extractor
+          cd workflows/transformers/labelling_transformer
           docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
           --build-context piplock=../../../ \
           --build-arg PREPROCESSED_DATA_PATH_PREFIX=$PREPROCESSED_DATA_PATH_PREFIX \

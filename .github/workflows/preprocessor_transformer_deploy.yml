@@ -44,11 +44,11 @@ jobs:
           TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX: ${{ secrets.TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX }}
           PREPROCESSED_DESTINATION_PATH_PREFIX: ${{ secrets.PREPROCESSED_DESTINATION_PATH_PREFIX }}
         run: |
-          # Change to the top_stocks_opening_closing_prices_extractor directory.
+          # Change to the preprocessor_transformer directory.
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to lamba-function.
-          cd workflows/extractors/top_stocks_opening_closing_prices_extractor
+          cd workflows/transformers/preprocessor_transformer
           docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
           --build-context piplock=../../../ \
           --build-arg TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX=$TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX \
