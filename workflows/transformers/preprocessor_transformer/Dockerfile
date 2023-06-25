@@ -11,6 +11,3 @@ RUN pip install pipenv
 RUN pipenv requirements > requirements.txt
 RUN pip install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 CMD [ "lambda_function.lambda_handler" ]`
-
-# BUILD COMMAND
-# docker buildx build -t preprocessor_transformer:tag . --build-context piplock=../../../
