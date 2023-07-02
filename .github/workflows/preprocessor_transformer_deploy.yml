@@ -41,7 +41,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_PREPROCESSOR_TRANSFORMER }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-          TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX: ${{ secrets.TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX }}
           PREPROCESSED_DESTINATION_PATH_PREFIX: ${{ secrets.PREPROCESSED_DESTINATION_PATH_PREFIX }}
         run: |
           # Change to the preprocessor_transformer directory.
@@ -51,7 +50,6 @@ jobs:
           cd workflows/transformers/preprocessor_transformer
           docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
           --build-context piplock=../../../ \
-          --build-arg TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX=$TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX \
           --build-arg PREPROCESSED_DESTINATION_PATH_PREFIX=$PREPROCESSED_DESTINATION_PATH_PREFIX \
           --build-arg BUCKET_NAME=$BUCKET_NAME \
           --output type=docker .
