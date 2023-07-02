@@ -46,3 +46,9 @@ def lambda_handler(event, context):
     key = f'extracted_data/top_stocks_info/top_stocks_info_{today}.csv'
     s3.put_object(Bucket=BUCKET_NAME, Key=key,
                   Body=top_stock_info_df.to_csv(index=False))
+
+    return {
+        "status": "success",
+        "topStocks": top_stock_tickers,
+        "pathTopStocksData": key
+    }
