@@ -26,14 +26,13 @@ def lambda_handler(event, context) -> None:
     """
     today = event['workflowStart']['today']
     top_stocks_info_extracted_path = event['extractors']['topStocksDataExtractor']['pathTopStocksData']
-    
+
     top_stocks_info_extracted = get_data_from_s3(
-        BUCKET_NAME, TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX, today, 'top_stocks_info')
+        BUCKET_NAME, top_stocks_info_extracted_path)
     preprocessed_data = rename_columns(top_stocks_info_extracted)
     preprocessed_data = create_new_feature_columns(preprocessed_data)
     preprocessed_data = impute_values_in_columns(preprocessed_data)
 
     preprocessed_data_path = build_s3_path(
         PREPROCESSED_DESTINATION_PATH_PREFIX, today, 'preprocessed_data')
-    upload_data_to_s3(BUCKET_NAME, PREPROCESSED_DESTINATION_PATH_PREFIX,
-                      preprocessed_data, today, 'preprocessed_data')
+    upload_data_to_s3(BUCKET_NAME, preprocessed_data_path, preprocessed_data)

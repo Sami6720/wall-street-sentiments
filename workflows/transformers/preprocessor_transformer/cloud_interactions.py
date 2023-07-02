@@ -21,17 +21,13 @@ def build_s3_path(data_path_prefix: str,
     """
     return f's3://{data_path_prefix}/{data_type}_{today}.csv'
 
-def get_data_from_s3(bucket_name: str, data_path_prefix: str,
-                     today: str, data_type: str) -> pd.DataFrame:
+
+def get_data_from_s3(bucket_name: str, s3_path: str) -> pd.DataFrame:
     """Get data from S3
 
     param bucket_name: Name of S3 bucket.
     type: str
-    param data_path_prefix: Path prefix to data.
-    type: str
-    param today: Today's date.
-    type: str
-    param data_type: Type of data.
+    param s3_path: Path to data.
     type: str
 
     return: Fetched data.
@@ -39,34 +35,30 @@ def get_data_from_s3(bucket_name: str, data_path_prefix: str,
     """
 
     s3 = boto3.client('s3')
-    key = f'{data_path_prefix}/{data_type}_{today}.csv'
     try:
-        obj = s3.get_object(Bucket=bucket_name, Key=key)
+        obj = s3.get_object(Bucket=bucket_name, Key=s3_path)
         extracted_data = pd.read_csv(obj['Body'])
         return extracted_data
     except botocore.exceptions.ClientError as error:
         raise error
 
 
-def upload_data_to_s3(bucket_name: str, destination_prefix: str,
-                      data: pd.DataFrame, today: str, data_type: str) -> None:
+def upload_data_to_s3(bucket_name: str, s3_path: str, data: pd.DataFrame) -> None:
     """Upload data to S3
 
     param bucket_name: Name of S3 bucket.
     type: str
-    param destination_prefix: Path prefix to data.
+    param s3_path: Path to data.
     type: str
     param data: Data to be uploaded.
     type: pd.DataFrame
-    param today: Today's date.
-    type: str
-    param data_type: Type of data.
-    type: str
 
     return: None
     """
 
     s3 = boto3.client('s3')
-    key = f'{destination_prefix}/{data_type}_{today}.csv'
-    s3.put_object(Bucket=bucket_name, Key=key,
-                  Body=data.to_csv(index=False))
+    try:
+        s3.put_object(Bucket=bucket_name, Key=s3_path,
+                      Body=data.to_csv(index=False))
+    except botocore.exceptions.ClientError as error:
+        raise error
