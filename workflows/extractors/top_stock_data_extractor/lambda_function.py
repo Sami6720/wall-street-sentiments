@@ -25,9 +25,7 @@ def lambda_handler(event, context):
     config = Config()
     FINHUB_API_KEY = config.finnhub_api_key
     BUCKET_NAME = config.bucket_name
-    timezone = pytz.timezone('America/New_York')
-    current_time = datetime.now(timezone)
-    today = current_time.strftime('%m-%d-%Y')
+    today = event['workflowStart']['today']
     top_stocks_raw_reddit_sentiment_info = get_top_stocks_raw_reddit_sentiment_info()
     top_stock_tickers = get_top_stock_tickers(
         top_stocks_raw_reddit_sentiment_info)
