@@ -36,3 +36,8 @@ def lambda_handler(event, context) -> None:
     preprocessed_data_path = build_s3_path(
         PREPROCESSED_DESTINATION_PATH_PREFIX, today, 'preprocessed_data')
     upload_data_to_s3(BUCKET_NAME, preprocessed_data_path, preprocessed_data)
+
+    return {
+        'status': 'success',
+        'pathPreprocessedData': preprocessed_data_path
+    }
