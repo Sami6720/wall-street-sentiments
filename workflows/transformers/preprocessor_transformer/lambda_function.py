@@ -1,6 +1,4 @@
-from datetime import datetime
 from config import Config
-import pytz
 from preprocessor_transformer import create_new_feature_columns, \
     impute_values_in_columns, \
     rename_columns

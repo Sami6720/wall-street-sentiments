@@ -1,7 +1,4 @@
-from datetime import datetime
-import boto3
 from config import Config
-import pytz
 from labelling_transformer import label_data
 from cloud_interactions import get_data_from_s3, upload_data_to_s3, \
     build_s3_path
