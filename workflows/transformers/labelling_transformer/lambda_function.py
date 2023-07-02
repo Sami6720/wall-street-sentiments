@@ -23,9 +23,9 @@ def lambda_handler(event, context) -> None:
     return: Status of lambda function execution.
     rtype: dict
     """
-    timezone = pytz.timezone('America/New_York')
-    current_time = datetime.now(timezone)
-    today = current_time.strftime('%m-%d-%Y')
+    today = event['workflowStart']['today']
+    preprocessed_data_path = event['transformers']['preprocessorTransformer']['pathPreprocessedData']
+    top_stocks_prices_extracted_path = event['extractors']['topStocksPricesExtractor']['topStockPricesPath']
 
     preprocessed_data = get_data_from_s3(BUCKET_NAME, PREPROCESSED_DATA_PATH_PREFIX,
                                          today, 'preprocessed_data')
