@@ -37,3 +37,8 @@ def lambda_handler(event, context) -> None:
     labelled_data_path = build_s3_path(
         LABELLED_DATA_DESTINATION_PREFIX, today, 'labelled_data')
     upload_data_to_s3(BUCKET_NAME, labelled_data_path, labelled_data)
+
+    return {
+        'status': 'success',
+        'pathLabelledData': labelled_data_path
+    }
