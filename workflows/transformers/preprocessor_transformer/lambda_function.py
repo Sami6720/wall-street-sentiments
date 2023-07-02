@@ -4,7 +4,8 @@ import pytz
 from preprocessor_transformer import create_new_feature_columns, \
     impute_values_in_columns, \
     rename_columns
-from cloud_interactions import get_data_from_s3, upload_data_to_s3
+from cloud_interactions import get_data_from_s3, upload_data_to_s3, \
+    build_s3_path
 
 config = Config()
 BUCKET_NAME = config.bucket_name
@@ -27,11 +28,15 @@ def lambda_handler(event, context) -> None:
     current_time = datetime.now(timezone)
     today = current_time.strftime('%m-%d-%Y')
 
+    top_stocks_info_extracted_path = build_s3_path(
+        TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX, today, 'top_stocks_info')
     top_stocks_info_extracted = get_data_from_s3(
         BUCKET_NAME, TOP_STOCKS_INFO_EXTRACTED_PATH_PREFIX, today, 'top_stocks_info')
     preprocessed_data = rename_columns(top_stocks_info_extracted)
     preprocessed_data = create_new_feature_columns(preprocessed_data)
     preprocessed_data = impute_values_in_columns(preprocessed_data)
 
+    preprocessed_data_path = build_s3_path(
+        PREPROCESSED_DESTINATION_PATH_PREFIX, today, 'preprocessed_data')
     upload_data_to_s3(BUCKET_NAME, PREPROCESSED_DESTINATION_PATH_PREFIX,
                       preprocessed_data, today, 'preprocessed_data')
