@@ -1,5 +1,3 @@
-
-from datetime import datetime
 from config import Config
 from top_stock_data_extractor import get_top_stocks_raw_reddit_sentiment_info, \
     get_top_stocks_mentioning_user_counts, \
@@ -8,7 +6,6 @@ from top_stock_data_extractor import get_top_stocks_raw_reddit_sentiment_info, \
     get_top_stock_tickers, \
     create_top_stock_info_df
 import boto3
-import pytz
 
 
 def lambda_handler(event, context):

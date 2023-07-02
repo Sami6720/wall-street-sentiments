@@ -1,9 +1,6 @@
-from datetime import datetime
 from top_stocks_opening_closing_prices_extractor import get_top_stocks_opening_closing_prices
-import pandas as pd
 import boto3
 from config import Config
-import pytz
 
 
 def lambda_handler(event, context):
