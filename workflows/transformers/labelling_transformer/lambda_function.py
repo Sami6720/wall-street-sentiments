@@ -5,8 +5,7 @@ from cloud_interactions import get_data_from_s3, upload_data_to_s3, \
 
 config = Config()
 BUCKET_NAME = config.bucket_name
-PREPROCESSED_DATA_PATH_PREFIX = config.preprocessed_data_path_prefix
-TOP_STOCKS_PRICES_EXTRACTED_PREFIX = config.top_stocks_prices_extracted_prefix
+
 LABELLED_DATA_DESTINATION_PREFIX = config.labelled_data_destination_prefix
 
 
