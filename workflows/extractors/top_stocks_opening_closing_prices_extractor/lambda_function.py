@@ -37,3 +37,8 @@ def lambda_handler(event, context):
     key = f'extracted_data/top_stocks_opening_closing_prices/top_stocks_opening_closing_prices_{today}.csv'
     s3_client.put_object(Bucket=BUCKET_NAME, Key=key,
                          Body=top_stocks_opening_closing_prices_df.to_csv(index=False))
+
+    return {
+        "status": "success",
+        "topStockPricesPath": key
+    }
