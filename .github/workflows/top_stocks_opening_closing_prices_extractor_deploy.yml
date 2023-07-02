@@ -3,7 +3,7 @@ name: top_stocks_opening_closing_prices_extractor_deploy
 on:
   push:
     branches:
-      - "master"
+      - "dev-test-step-function-architecture"
     paths:
       - "workflows/extractors/top_stocks_opening_closing_prices_extractor/**"
       - ".github/workflows/top_stocks_opening_closing_prices_extractor.yml"

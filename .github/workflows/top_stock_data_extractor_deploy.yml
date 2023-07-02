@@ -3,7 +3,7 @@ name: top_stock_data_extractor_deploy
 on:
   push:
     branches:
-      - "master"
+      - "dev-test-step-function-architecture"
     paths:
       - "workflows/extractors/top_stock_data_extractor/**"
       - ".github/workflows/top_stock_data_extractor_deploy.yml"

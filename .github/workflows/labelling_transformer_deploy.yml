@@ -3,7 +3,7 @@ name: labelling_transformer_deploy
 on:
   push:
     branches:
-      - "master"
+      - "dev-test-step-function-architecture"
     paths:
       - "workflows/transformers/labelling_transformer/**"
       - ".github/workflows/labelling_transformer_deploy.yml"

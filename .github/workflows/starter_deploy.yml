@@ -3,7 +3,7 @@ name: starter_deploy
 on:
   push:
     branches:
-      - "master"
+      - "dev-test-step-function-architecture"
     paths:
       - "workflows/orchestrator/starter/**"
       - ".github/workflows/starter_deploy.yml"
