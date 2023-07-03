@@ -19,7 +19,7 @@ def build_s3_path(data_path_prefix: str,
     return: S3 path.
     rtype: str
     """
-    return f's3://{data_path_prefix}/{data_type}_{today}.csv'
+    return f'{data_path_prefix}/{data_type}_{today}.csv'
 
 
 def get_data_from_s3(bucket_name: str, s3_path: str) -> pd.DataFrame:
