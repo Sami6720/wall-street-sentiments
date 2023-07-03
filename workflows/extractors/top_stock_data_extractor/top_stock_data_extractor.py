@@ -6,7 +6,7 @@ from alternative_assets import alternative_assets_tickers
 from datetime import datetime
 
 
-def get_top_stocks_sentiments_only(top_stock_tickers: list) -> list:
+def get_top_stocks_sentiment(top_stock_tickers: list) -> list:
     """
     Get top stocks' sentiment by scraping Apewisdom's stocks page. This
     is done by analyzing comments over a period of 24 hours from the morning
