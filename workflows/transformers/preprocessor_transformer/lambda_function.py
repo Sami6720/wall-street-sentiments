@@ -11,14 +11,16 @@ PREPROCESSED_DESTINATION_PATH_PREFIX = config.preprocessed_destination_path_pref
 
 
 def lambda_handler(event, context) -> None:
-    """Lambda handler function
+    """
+    Lambda handler function to carry out the preprocessing of data.
 
     param event: Event data passed to function.
     type: dict
     param context: Runtime information passed to function.
     type: dict
 
-    return: Status of lambda function execution.
+    return: Status of the lambda function execution and the
+            s3 path where the preprocessed data is stored.
     rtype: dict
     """
     today = event['workflowStart']['today']

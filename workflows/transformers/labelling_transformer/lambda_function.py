@@ -10,14 +10,16 @@ LABELLED_DATA_DESTINATION_PREFIX = config.labelled_data_destination_prefix
 
 
 def lambda_handler(event, context) -> None:
-    """Lambda handler function
+    """
+    Lambda handler function
 
     param event: Event data passed to function.
     type: dict
     param context: Runtime information passed to function.
     type: dict
 
-    return: Status of lambda function execution.
+    return: Status of lambda function execution and s3 path where 
+            lablled data for the day is stored.
     rtype: dict
     """
     today = event['workflowStart']['today']
