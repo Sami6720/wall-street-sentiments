@@ -41,8 +41,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_LABELLING_TRANSFORMER }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-          PREPROCESSED_DATA_PATH_PREFIX: ${{ secrets.PREPROCESSED_DATA_PATH_PREFIX }}
-          TOP_STOCKS_PRICES_EXTRACTED_PREFIX: ${{ secrets.TOP_STOCKS_PRICES_EXTRACTED_PREFIX }}
           LABELLED_DATA_DESTINATION_PREFIX: ${{ secrets.LABELLED_DATA_DESTINATION_PREFIX }}
         run: |
           # Change to the labelling_transformer directory.
@@ -52,8 +50,6 @@ jobs:
           cd workflows/transformers/labelling_transformer
           docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
           --build-context piplock=../../../ \
-          --build-arg PREPROCESSED_DATA_PATH_PREFIX=$PREPROCESSED_DATA_PATH_PREFIX \
-          --build-arg TOP_STOCKS_PRICES_EXTRACTED_PREFIX=$TOP_STOCKS_PRICES_EXTRACTED_PREFIX \
           --build-arg LABELLED_DATA_DESTINATION_PREFIX=$LABELLED_DATA_DESTINATION_PREFIX \
           --build-arg BUCKET_NAME=$BUCKET_NAME \
           --output type=docker .
