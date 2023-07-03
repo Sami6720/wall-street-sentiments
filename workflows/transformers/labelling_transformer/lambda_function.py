@@ -21,8 +21,8 @@ def lambda_handler(event, context) -> None:
     rtype: dict
     """
     today = event['workflowStart']['today']
-    preprocessed_data_path = event['transformers']['preprocessorTransformer']['pathPreprocessedData']
-    top_stocks_prices_extracted_path = event['extractors']['topStocksPricesExtractor']['topStockPricesPath']
+    preprocessed_data_path = event['preprocessorTransformer']['Payload']['pathPreprocessedData']
+    top_stocks_prices_extracted_path = event['topStockPricesExtractor']['Payload']['pathTopStockPrices']
 
     preprocessed_data = get_data_from_s3(BUCKET_NAME, preprocessed_data_path)
     top_stocks_prices_extracted = get_data_from_s3(
