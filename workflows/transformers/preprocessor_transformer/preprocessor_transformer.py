@@ -4,8 +4,12 @@ from config import Config
 
 config = Config()
 
+
 def create_new_feature_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """Create new feature columns
+    """
+    Create new feature columns from existing columns. These would
+    be dividend_exists, rank_percentage_change_24h and 
+    mentions_percentage_change_24h.
 
     param data: Dataframe of extracted data.
     type: pd.DataFrame
@@ -30,7 +34,12 @@ def create_new_feature_columns(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def impute_values_in_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """Impute values in columns
+    """
+    Impute values in columns where the values are missing a noitceable
+    amount of time. This is because a lot of companies don't pay dividends.
+    Also, if a company is not making any money, it's price to equity ratio
+    will be non existent as well. These were initially represented as NaNs.
+    They are now replaced with 0s.
 
     param data: Dataframe of extracted data.
     type: pd.DataFrame
@@ -48,7 +57,8 @@ def impute_values_in_columns(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def rename_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """Rename columns
+    """
+    Renaming columns of fundamental data that was extracted.
 
     param data: Dataframe of extracted data.
     type: pd.DataFrame

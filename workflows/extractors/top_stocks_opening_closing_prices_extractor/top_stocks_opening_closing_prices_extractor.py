@@ -4,13 +4,16 @@ import pandas as pd
 
 def get_top_stocks_opening_closing_prices(top_stock_tickers: list, today: str,
                                           FINNHUB_API_KEY: str) -> pd.DataFrame:
-    """Get current stock price for the list of stock tickers.
+    """ 
+    Get opening and closing stock prices for the list of top
+    stocks for the day. These would later be used to label 
+    the data.
 
-    param: top_stock_tickers
+    param top_stock_tickers: List of top stock tickers.
     type: list
     param: FINNHUB_API_KEY
     type: str
-    today: timestamp,
+    today: today's date in MM-DD-YYYY format,
     type: str
 
     return: top_stocks_opening_closing_prices_df
