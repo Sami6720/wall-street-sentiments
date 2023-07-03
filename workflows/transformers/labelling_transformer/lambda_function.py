@@ -1,38 +1,44 @@
-from datetime import datetime
-import boto3
 from config import Config
-import pytz
 from labelling_transformer import label_data
-from cloud_interactions import get_data_from_s3, upload_data_to_s3
+from cloud_interactions import get_data_from_s3, upload_data_to_s3, \
+    build_s3_path
 
 config = Config()
 BUCKET_NAME = config.bucket_name
-PREPROCESSED_DATA_PATH_PREFIX = config.preprocessed_data_path_prefix
-TOP_STOCKS_PRICES_EXTRACTED_PREFIX = config.top_stocks_prices_extracted_prefix
+
 LABELLED_DATA_DESTINATION_PREFIX = config.labelled_data_destination_prefix
 
 
 def lambda_handler(event, context) -> None:
-    """Lambda handler function
+    """
+    Lambda handler function
 
     param event: Event data passed to function.
     type: dict
     param context: Runtime information passed to function.
     type: dict
 
-    return: Status of lambda function execution.
+    return: Status of lambda function execution and s3 path where 
+            lablled data for the day is stored.
     rtype: dict
     """
-    timezone = pytz.timezone('America/New_York')
-    current_time = datetime.now(timezone)
-    today = current_time.strftime('%m-%d-%Y')
+    today = event['workflowStart']['today']
+    preprocessed_data_path = (event['preprocessorTransformer']['Payload']
+                              ['pathPreprocessedData'])
+    top_stocks_prices_extracted_path = (event['topStockPricesExtractor']
+                                        ['Payload']['pathTopStockPrices'])
 
-    preprocessed_data = get_data_from_s3(BUCKET_NAME, PREPROCESSED_DATA_PATH_PREFIX,
-                                         today, 'preprocessed_data')
-    top_stocks_prices_extracted = get_data_from_s3(BUCKET_NAME, TOP_STOCKS_PRICES_EXTRACTED_PREFIX,
-                                                   today, 'top_stocks_opening_closing_prices')
+    preprocessed_data = get_data_from_s3(BUCKET_NAME, preprocessed_data_path)
+    top_stocks_prices_extracted = get_data_from_s3(
+        BUCKET_NAME, top_stocks_prices_extracted_path)
     labelled_data = label_data(
         preprocessed_data, top_stocks_prices_extracted)
 
-    upload_data_to_s3(BUCKET_NAME, LABELLED_DATA_DESTINATION_PREFIX,
-                      labelled_data, today, 'labelled_data')
+    labelled_data_path = build_s3_path(
+        LABELLED_DATA_DESTINATION_PREFIX, today, 'labelled_data')
+    upload_data_to_s3(BUCKET_NAME, labelled_data_path, labelled_data)
+
+    return {
+        'status': 'success',
+        'pathLabelledData': labelled_data_path
+    }
