@@ -2,6 +2,10 @@ from top_stocks_opening_closing_prices_extractor import get_top_stocks_opening_c
 import boto3
 from config import Config
 
+config = Config()
+FINHUB_API_KEY = config.finnhub_api_key
+BUCKET_NAME = config.bucket_name
+
 
 def lambda_handler(event, context):
     """
@@ -11,16 +15,12 @@ def lambda_handler(event, context):
 
     param event: Event data passed to this lambda function.
     type: dict
-
     param context: Context data passed to this lambda function. 
     type: dict
 
     return stock_price_df: Dataframe of top stocks opening and closing prices.
-    rtype: pd.DataFrame"""
-
-    config = Config()
-    FINHUB_API_KEY = config.finnhub_api_key
-    BUCKET_NAME = config.bucket_name
+    rtype: pd.DataFrame
+    """
     s3_client = boto3.client('s3')
     today = event['workflowStart']['today']
     top_stock_tickers = list(

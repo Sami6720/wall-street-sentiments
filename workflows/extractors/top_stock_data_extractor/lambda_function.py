@@ -7,6 +7,10 @@ from top_stock_data_extractor import get_top_stocks_reddit_metrics, \
     create_top_stock_info_df
 import boto3
 
+config = Config()
+FINHUB_API_KEY = config.finnhub_api_key
+BUCKET_NAME = config.bucket_name
+
 
 def lambda_handler(event, context):
     """
@@ -25,9 +29,6 @@ def lambda_handler(event, context):
     path where the top stocks info is stored.
     rtype: dict 
     """
-    config = Config()
-    FINHUB_API_KEY = config.finnhub_api_key
-    BUCKET_NAME = config.bucket_name
     today = event['workflowStart']['today']
     top_stocks_reddit_metrics = get_top_stocks_reddit_metrics()
     top_stock_tickers = get_top_stock_tickers(
