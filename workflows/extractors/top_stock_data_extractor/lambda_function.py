@@ -1,5 +1,5 @@
 from config import Config
-from top_stock_data_extractor import get_top_stocks_raw_reddit_sentiment_info, \
+from top_stock_data_extractor import get_top_stocks_reddit_metrics, \
     get_top_stocks_mentioning_user_counts, \
     get_top_stocks_fundamentals_df, \
     get_top_stocks_sentiments_only, \
@@ -29,9 +29,9 @@ def lambda_handler(event, context):
     FINHUB_API_KEY = config.finnhub_api_key
     BUCKET_NAME = config.bucket_name
     today = event['workflowStart']['today']
-    top_stocks_raw_reddit_sentiment_info = get_top_stocks_raw_reddit_sentiment_info()
+    top_stocks_reddit_metrics = get_top_stocks_reddit_metrics()
     top_stock_tickers = get_top_stock_tickers(
-        top_stocks_raw_reddit_sentiment_info)
+        top_stocks_reddit_metrics)
     top_stocks_sentiments_only = get_top_stocks_sentiments_only(
         top_stock_tickers)
     top_stocks_mentioning_user_counts = get_top_stocks_mentioning_user_counts(
@@ -39,7 +39,7 @@ def lambda_handler(event, context):
     top_stocks_fundamentals_df = get_top_stocks_fundamentals_df(
         top_stock_tickers, FINHUB_API_KEY)
     top_stock_info_df = create_top_stock_info_df(
-        top_stocks_raw_reddit_sentiment_info, top_stocks_sentiments_only,
+        top_stocks_reddit_metrics, top_stocks_sentiments_only,
         top_stocks_mentioning_user_counts, top_stocks_fundamentals_df, today)
 
     # boto3 to put csv into S3 with today's date as filename (mm/dd/yyyy)

@@ -41,8 +41,8 @@ def get_top_stocks_sentiments_only(top_stock_tickers: list) -> list:
     return top_stocks_sentiments
 
 
-def get_top_stocks_raw_reddit_sentiment_info(page_number: int = 1,
-                                             required_number_of_top_stocks: int = 10) -> list:
+def get_top_stocks_reddit_metrics(page_number: int = 1,
+                                  required_number_of_top_stocks: int = 10) -> list:
     """
     Get top stocks' (by default 10) reddit metrics from Apewisdom API. This
     includes the following metrics: upvotes, mentions, rank, mentions_24h_ago, 
