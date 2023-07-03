@@ -21,7 +21,7 @@ def lambda_handler(event, context):
     s3_client = boto3.client('s3')
     today = event['workflowStart']['today']
     top_stock_tickers = list(
-        event['extractors']['topStocksDataExtractor']['topStocks'])
+        event['topStocksDataExtractor']['Payload']['topStocks'])
     top_stocks_opening_closing_prices_df = get_top_stocks_opening_closing_prices(
         top_stock_tickers, today, FINHUB_API_KEY)
 
@@ -32,5 +32,5 @@ def lambda_handler(event, context):
 
     return {
         "status": "success",
-        "topStockPricesPath": key
+        "pathTopStockPrices": key
     }
