@@ -171,7 +171,7 @@ def get_top_stock_tickers(top_stocks_raw_reddit_sentiment_info: list) -> list:
     return top_stock_tickers
 
 
-def create_top_stock_info_df(top_stocks_info_on_first_page: dict, top_stocks_sentiments: list,
+def create_top_stock_data_df(top_stocks_info_on_first_page: dict, top_stocks_sentiments: list,
                              top_stocks_mentioning_user_counts: list,
                              top_stocks_fundamentals_df: pd.DataFrame,
                              timestamp: datetime) -> pd.DataFrame:

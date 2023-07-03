@@ -4,7 +4,7 @@ from top_stock_data_extractor import get_top_stocks_reddit_metrics, \
     get_top_stocks_fundamentals_df, \
     get_top_stocks_sentiment, \
     get_top_stock_tickers, \
-    create_top_stock_info_df
+    create_top_stock_data_df
 import boto3
 
 config = Config()
@@ -39,7 +39,7 @@ def lambda_handler(event, context):
         top_stock_tickers)
     top_stocks_fundamentals_df = get_top_stocks_fundamentals_df(
         top_stock_tickers, FINHUB_API_KEY)
-    top_stock_info_df = create_top_stock_info_df(
+    top_stock_info_df = create_top_stock_data_df(
         top_stocks_reddit_metrics, top_stocks_sentiment,
         top_stocks_mentioning_user_counts, top_stocks_fundamentals_df, today)
 
