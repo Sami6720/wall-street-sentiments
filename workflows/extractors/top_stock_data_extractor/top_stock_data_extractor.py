@@ -7,13 +7,17 @@ from datetime import datetime
 
 
 def get_top_stocks_sentiments_only(top_stock_tickers: list) -> list:
-    """Get top stocks' sentiment by scraping Apewisdom's stocks page.
+    """
+    Get top stocks' sentiment by scraping Apewisdom's stocks page. This
+    is done by analyzing comments over a period of 24 hours from the morning
+    when the workflow starts.
 
     param: top_stock_tickers
     prarm type: list
 
     return: top_ten_stock_sentiment
-    rtype: list"""
+    rtype: list
+    """
     top_stocks_sentiments = []
     for stock in top_stock_tickers:
         try:
@@ -39,20 +43,22 @@ def get_top_stocks_sentiments_only(top_stock_tickers: list) -> list:
 
 def get_top_stocks_raw_reddit_sentiment_info(page_number: int = 1,
                                              required_number_of_top_stocks: int = 10) -> list:
-    """Get top stock (by default) info from Apewisdom API.
+    """
+    Get top stocks' (by default 10) reddit metrics from Apewisdom API. This
+    includes the following metrics: upvotes, mentions, rank, mentions_24h_ago, 
+    and rank_24h_ago. These data points are calculated over a 24 hour period 
+    from the morning when the workflow starts.
 
-    param: page_number
+    param page_number: Pagination nuber for the APEWISDOM API.
     type: int
-
-    param: Finnhub API key
-    type: str
-
-    param: required_number_of_top_stocks
+    param required_number_of_top_stocks: Number of top stocks to be returned. 
+    Note we are only looking for common stocks and not alternative assets.
     type: int
     default: 10
 
     return: top_stocks_raw_reddit_sentiment_info
-    rtype: list"""
+    rtype: list of dicts
+    """
     FILTER = 'all-stocks'
     top_stocks_raw_reddit_sentiment_info = []
     try:
@@ -77,13 +83,15 @@ def get_top_stocks_raw_reddit_sentiment_info(page_number: int = 1,
 
 
 def get_top_stocks_mentioning_user_counts(top_stock_tickers: list) -> list:
-    """Get top stocks' mentioning user count by scraping Apewisdom's stocks page.
+    """
+    Get top stocks' mentioning user count by scraping Apewisdom's stocks page.
 
     param: top_stock_tickers
     prarm type: list
 
     return: top_stocks_mentioning_user_counts
-    rtype: list"""
+    rtype: list
+    """
     top_stocks_mentioning_user_counts = []
     for stock in top_stock_tickers:
         try:
@@ -106,8 +114,12 @@ def get_top_stocks_mentioning_user_counts(top_stock_tickers: list) -> list:
     return top_stocks_mentioning_user_counts
 
 
-def get_top_stocks_fundamentals_df(top_stock_tickers: list, FINNHUB_API_KEY: str) -> pd.DataFrame:
-    """Get fundamentals for list of top stocks.
+def get_top_stocks_fundamentals_df(top_stock_tickers: list,
+                                   FINNHUB_API_KEY: str) -> pd.DataFrame:
+    """
+    Get financial fundamentals for list of top stocks. This inlcudes the 
+    following metrics: beta, epsTTM, peTTM, roeTTM, dividendYieldIndicatedAnnual, 
+    totalDebt/totalEquityQuarterly, and revenueGrowthTTMYoy.
 
     param: top_stock_tickers
     type: list
@@ -116,7 +128,8 @@ def get_top_stocks_fundamentals_df(top_stock_tickers: list, FINNHUB_API_KEY: str
     type: str
 
     return: top_stocks_fundamentals_df
-    rtype: pd.DataFrame"""
+    rtype: pd.DataFrame
+    """
     top_stocks_fundamentals_df = pd.DataFrame()
     METRICS = ['beta', 'epsTTM', 'peTTM', 'roeTTM', 'dividendYieldIndicatedAnnual',
                'totalDebt/totalEquityQuarterly', 'revenueGrowthTTMYoy']
@@ -144,12 +157,14 @@ def get_top_stocks_fundamentals_df(top_stock_tickers: list, FINNHUB_API_KEY: str
 
 
 def get_top_stock_tickers(top_stocks_raw_reddit_sentiment_info: list) -> list:
-    """Get top stocks' tickers from the first page of the Apewisom API.
+    """
+    Get top stocks' tickers from the first page of the Apewisom.io website.
 
     param: top_ten_stock_info_on_first_page
 
     return: top_ten_stock_ticker
-    rtype: list"""
+    rtype: list
+    """
     top_stock_tickers = []
     for stock in top_stocks_raw_reddit_sentiment_info:
         top_stock_tickers.append(stock['ticker'])
@@ -157,12 +172,12 @@ def get_top_stock_tickers(top_stocks_raw_reddit_sentiment_info: list) -> list:
 
 
 def create_top_stock_info_df(top_stocks_info_on_first_page: dict, top_stocks_sentiments: list,
-                             top_stocks_mentioning_user_counts: list, top_stocks_fundamentals_df: pd.DataFrame,
+                             top_stocks_mentioning_user_counts: list,
+                             top_stocks_fundamentals_df: pd.DataFrame,
                              timestamp: datetime) -> pd.DataFrame:
-
-    # TODO: Fix the logic of the creae_top_stock_info_df function so that it is
-    #      consistent
-    """Create a DataFrame for the top ten stock info.
+    """
+    Create a merged dataframe containing the sentiment info, reddit metrics,
+    and fundamental metrics of the top stocks.
 
     param: top_ten_stock_info
     type: dict

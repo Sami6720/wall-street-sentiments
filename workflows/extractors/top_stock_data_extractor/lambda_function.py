@@ -9,15 +9,21 @@ import boto3
 
 
 def lambda_handler(event, context):
-    """ Lambda handler for the top stock data extractor
+    """
+    Lambda handler for the top stock data extractor. This lambda function
+    extracts metrics like upvotes, mentions etc from reddit for the top stocks. 
+    It also extracts sentiment for each stock on Reddit from the website Apewisdom.io.
+    and extracts fundamentals like market cap, price to earnings ratio etc for each stock.
 
-    param: event:
+    param event: Event data passed to this lambda function.
     type: dict
 
-    param: context
+    param context: Context data passed to this lambda function.
     type: dict
 
-    return: None 
+    return lambda function execution status, the list of top stocks and s3
+    path where the top stocks info is stored.
+    rtype: dict 
     """
     config = Config()
     FINHUB_API_KEY = config.finnhub_api_key

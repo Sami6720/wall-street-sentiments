@@ -4,15 +4,18 @@ from config import Config
 
 
 def lambda_handler(event, context):
-    """Get current stock price for the list of stock tickers.
+    """
+    Get opening and closing stock prices for the list of top
+    stocks for the day. These would later be used to label 
+    the data.
 
-    param: event
+    param event: Event data passed to this lambda function.
     type: dict
 
-    param: context
+    param context: Context data passed to this lambda function. 
     type: dict
 
-    return: stock_price_df
+    return stock_price_df: Dataframe of top stocks opening and closing prices.
     rtype: pd.DataFrame"""
 
     config = Config()
