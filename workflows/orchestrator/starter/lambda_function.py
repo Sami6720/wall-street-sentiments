@@ -9,8 +9,8 @@ def lambda_handler(event, context):
     param context: Context object passed to this handler.
     type context: dict
 
-    return: Event dict.
-    rtype: dict containing status, and today's date in 
+    return: Event dict containing status and today's date in mm/dd/yyyy format. 
+    rtype: dict
     """
 
     today = get_today()
