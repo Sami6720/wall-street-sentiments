@@ -33,11 +33,16 @@ def lambda_handler(event, context) -> None:
     preprocessed_data = create_new_feature_columns(preprocessed_data)
     preprocessed_data = impute_values_in_columns(preprocessed_data)
 
-    preprocessed_data_path = build_s3_path(
-        PREPROCESSED_DESTINATION_PATH_PREFIX, today, 'preprocessed_data')
-    upload_data_to_s3(BUCKET_NAME, preprocessed_data_path, preprocessed_data)
+    preprocessed_data_csv_path = build_s3_path(
+        PREPROCESSED_DESTINATION_PATH_PREFIX, "csv", today, 'preprocessed_data')
+    preprocessed_data_json_path = build_s3_path(
+        PREPROCESSED_DESTINATION_PATH_PREFIX, "json", today, 'preprocessed_data')
+
+    upload_data_to_s3(BUCKET_NAME, preprocessed_data_csv_path, preprocessed_data.to_csv(index=False))
+    upload_data_to_s3(BUCKET_NAME, preprocessed_data_json_path, preprocessed_data.to_json(orient='records'))
 
     return {
         'status': 'success',
-        'pathPreprocessedData': preprocessed_data_path
+        'pathPreprocessedData': preprocessed_data_csv_path,
+        'pathPreprocessedDataJson': preprocessed_data_json_path
     }
