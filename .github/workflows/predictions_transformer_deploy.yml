@@ -6,7 +6,7 @@ on:
       - "master"
     paths:
       - "workflows/transformers/predictions_transformer/**"
-      - ".github/workflows/predictions_transformer.yml"
+      - ".github/workflows/predictions_transformer_deploy.yml"
 
 permissions:
   contents: read
