@@ -1,0 +1,63 @@
+name: model_perf_metrics_transformer
+
+on:
+  push:
+    branches:
+      - "master"
+    paths:
+      - "workflows/transformers/model_perf_metrics_transformer/**"
+      - ".github/workflows/model_perf_metrics_transformer.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_MODEL_PERF_METRICS_TRANSFORMER }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          MODEL_PERF_METRICS_DESTINATION_PREFIX: ${{ secrets.MODEL_PERF_METRICS_DESTINATION_PREFIX }}
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          MODEL_PERF_METRICS_COLLECTION_NAME: ${{ secrets.MODEL_PERF_METRICS_COLLECTION_NAME }}
+        run: |
+          # Change to the model_perf_metrics_transformer directory.
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to lamba-function.
+          cd workflows/transformers/model_perf_metrics_transformer
+          docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+          --build-context piplock=../../../ \
+          --build-arg BUCKET_NAME=$BUCKET_NAME \
+          --build-arg MODEL_PERF_METRICS_DESTINATION_PREFIX=$MODEL_PERF_METRICS_DESTINATION_PREFIX \
+          --build-arg DB_CONNECTION_STRING=$DB_CONNECTION_STRING \
+          --build-arg DB_NAME=$DB_NAME \
+          --build-arg MODEL_PERF_METRICS_COLLECTION_NAME=$MODEL_PERF_METRICS_COLLECTION_NAME \
+          --output type=docker .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
