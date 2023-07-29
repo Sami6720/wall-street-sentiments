@@ -48,7 +48,7 @@ def get_data_from_s3(bucket_name: str, s3_path: str) -> pd.DataFrame:
         raise error
 
 
-def upload_data_to_s3(bucket_name: str, s3_path: str, data: dict) -> None:
+def upload_data_to_s3(bucket_name: str, s3_path: str, data: pd.DataFrame) -> None:
     """
     Upload data to S3.
 
@@ -57,7 +57,7 @@ def upload_data_to_s3(bucket_name: str, s3_path: str, data: dict) -> None:
     :param s3_path: Path to data.
     :type: str
     :param data: Data to be uploaded.   
-    :type: dict
+    :type: pd.DataFrame
 
     :raises: botocore.exceptions.ClientError
 
@@ -67,6 +67,6 @@ def upload_data_to_s3(bucket_name: str, s3_path: str, data: dict) -> None:
     s3 = boto3.client('s3')
     try:
         s3.put_object(Bucket=bucket_name, Key=s3_path,
-                      Body=data)
+                      Body=data.to_csv(index=False))
     except botocore.exceptions.ClientError as error:
         raise error
