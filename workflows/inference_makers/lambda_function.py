@@ -1,3 +1,4 @@
+from inference_maker import add_meta_data
 from cloud_interactions import get_data_from_s3, upload_data_to_s3, build_s3_path
 from config import Config
 from logger import logger
@@ -37,6 +38,9 @@ def lambda_handler(event, context):
 
     xgboost_predictions = xgboost_model.predict(preprocessed_data)
     random_forest_predictions = random_forest_model.predict(preprocessed_data)
+
+    xgboost_predictions = add_meta_data(xgboost_predictions, preprocessed_data, 'xgboost')
+    random_forest_predictions = add_meta_data(random_forest_predictions, preprocessed_data, 'random_forest')
 
     xgboost_predictions_path = build_s3_path(config.predictions_destination_prefix, 'csv', workflow_date, 'xgboost')
     random_forest_predictions_path = build_s3_path(
