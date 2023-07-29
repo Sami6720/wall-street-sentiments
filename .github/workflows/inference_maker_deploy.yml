@@ -1,0 +1,61 @@
+name: inference_maker_deploy
+
+on:
+  push:
+    branches:
+      - "master"
+    paths:
+      - "workflows/inference_maker/**"
+      - ".github/workflows/inference_maker_deploy.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_INFERENCE_MAKER }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          PREDICTIONS_DESTINATION_PREFIX: ${{ secrets.PREDICTIONS_DESTINATION_PREFIX }}
+          XGBOOST_MODEL_PATH: ${{ secrets.XGBOOST_MODEL_PATH }}
+          RANDOM_FOREST_MODEL_PATH: ${{ secrets.RANDOM_FOREST_MODEL_PATH }}
+        run: |
+          # Change to the inference_maker directory.
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to lamba-function.
+          cd workflows/inference_maker
+          docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+          --build-context piplock=../../../ \
+          --build-arg BUCKET_NAME=$BUCKET_NAME \
+          --build-arg PREDICTIONS_DESTINATION_PREFIX=$PREDICTIONS_DESTINATION_PREFIX \
+          --build-arg XGBOOST_MODEL_PATH=$XGBOOST_MODEL_PATH \
+          --build-arg RANDOM_FOREST_MODEL_PATH=$RANDOM_FOREST_MODEL_PATH \
+          --output type=docker .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
