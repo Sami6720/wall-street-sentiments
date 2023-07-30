@@ -4,17 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-requests = "*"
-pandas = "*"
-ipykernel = "*"
-pyyaml = "*"
-beautifulsoup4 = "*"
-boto3 = "*"
-pytz = "*"
-python-dotenv = "*"
-matplotlib = "*"
-scikit-learn = "*"
-seaborn = "*"
+requests = "==2.31.0"
+pandas = "==2.0.1"
+ipykernel = "==6.23.1"
+pyyaml = "==6.0"
+beautifulsoup4 = "==4.12.2"
+boto3 = "==1.26.142"
+pytz = "==2023.3"
+python-dotenv = "==1.0.0"
+matplotlib = "==3.7.1"
+scikit-learn = "==1.2.2"
+seaborn = "==0.12.2"
+pymongo = "==4.4.1"
+xgboost = "==1.7.6"
 
 [dev-packages]
 
