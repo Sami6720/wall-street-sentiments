@@ -26,7 +26,7 @@ def build_predictions_by_models_json(workflow_date: str, predictions_paths: list
 
     for path in predictions_paths:
 
-        predictions = get_data_from_s3(path)
+        predictions = get_data_from_s3(bucket_name, path)
 
         predictions_dict_for_model = {}
         predictions_dict_for_model["workflow_date"] = workflow_date
