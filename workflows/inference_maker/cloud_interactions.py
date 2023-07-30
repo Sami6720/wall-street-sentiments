@@ -36,14 +36,12 @@ def get_data_from_s3(bucket_name: str, s3_path: str) -> pd.DataFrame:
     :raises: botocore.exceptions.ClientError
 
     :return: Fetched data.
-    :rtype: pd.DataFrame
+    :rtype: s3.Object
     """
 
     s3_client = boto3.client('s3')
     try:
-        obj = s3_client.get_object(Bucket=bucket_name, Key=s3_path)
-        extracted_data = pd.read_csv(obj['Body'])
-        return extracted_data
+        return s3_client.get_object(Bucket=bucket_name, Key=s3_path)['Body']
     except botocore.exceptions.ClientError as error:
         raise error
 
