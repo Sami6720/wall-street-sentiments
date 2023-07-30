@@ -12,8 +12,8 @@ def lambda_handler(event, context):
     """
     logger.info("Starting inference maker workflow")
 
-    preproceessed_data_path = event['preprocessorTransformer']['Payload']['pathPreprocessedData']
-    workflow_date = event['workflowStart']['today']
+    workflow_date = event['workflowStartDate']
+    preproceessed_data_path = event['pathPreprocessedData']
 
     preprocessed_data = get_data_from_s3(config.bucket_name, preproceessed_data_path)
 
