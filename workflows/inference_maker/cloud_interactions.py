@@ -1,6 +1,8 @@
 import boto3
 import botocore
 import pandas as pd
+import joblib
+from io import BytesIO
 
 
 def build_s3_path(data_path_prefix: str, file_extension: str,
@@ -68,3 +70,21 @@ def upload_data_to_s3(bucket_name: str, s3_path: str, data: pd.DataFrame) -> Non
                       Body=data.to_csv(index=False))
     except botocore.exceptions.ClientError as error:
         raise error
+
+
+def get_model(bucket_name: str, model_path: str) -> any:
+    """
+    Get model from S3.
+
+    :param bucket_name: Name of S3 bucket.
+    :type: str
+    :param model_path: Path to model.
+    :type: str
+
+    :raises: botocore.exceptions.ClientError
+
+    :return: Fetched model.
+    :rtype: any
+    """
+
+    return joblib.load(BytesIO(get_data_from_s3(bucket_name, model_path).read()))
