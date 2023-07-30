@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def add_meta_data(predictions, preprocessed_data, model_name):
+def combine_predictions_and_preprocessed_data(predictions, preprocessed_data, model_name) -> pd.DataFrame:
     """
     Add meta data to predictions.
 
@@ -11,6 +11,12 @@ def add_meta_data(predictions, preprocessed_data, model_name):
     :type: pd.DataFrame
     :param model_name: Name of model.
     :type: str
+
+    :return: Predictions with meta data.
+    :rtype: pd.DataFrame
     """
-    predictions = pd.concat([preprocessed_data, pd.DataFrame(predictions)], axis=1)
-    predictions['model'] = model_name
+
+    preprocessed_data['prediction'] = predictions
+    preprocessed_data['model'] = model_name
+
+    return preprocessed_data
