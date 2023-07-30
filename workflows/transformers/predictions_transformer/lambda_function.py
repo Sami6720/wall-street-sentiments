@@ -27,8 +27,8 @@ def lambda_handler(event, context):
 
     logger.info("Starting predictions transformer lambda function")
 
-    workflow_date = event["workflowStart"]["today"]
-    predictions_paths = event["predictions"]["Payload"]['predictionsPaths']
+    workflow_date = event["workflowStartDate"]
+    predictions_paths = event['predictionsPaths']
 
     predictions_by_models_json = build_predictions_by_models_json(workflow_date, predictions_paths, config.bucket_name)
     predictions_upload_path = build_s3_path(
