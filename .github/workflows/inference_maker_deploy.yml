@@ -51,7 +51,7 @@ jobs:
           # be deployed to lamba-function.
           cd workflows/inference_maker
           docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
-          --build-context piplock=../../../ \
+          --build-context piplock=../../ \
           --build-arg BUCKET_NAME=$BUCKET_NAME \
           --build-arg PREDICTIONS_DESTINATION_PREFIX=$PREDICTIONS_DESTINATION_PREFIX \
           --build-arg XGBOOST_MODEL_PATH=$XGBOOST_MODEL_PATH \
