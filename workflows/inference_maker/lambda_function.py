@@ -2,6 +2,7 @@ from inference_maker import add_meta_data
 from cloud_interactions import get_data_from_s3, upload_data_to_s3, build_s3_path
 from config import Config
 from logger import logger
+import joblib
 
 config = Config()
 
@@ -20,8 +21,8 @@ def lambda_handler(event, context):
     xgboost_model_path = config.xgboost_model_path
     random_forest_model_path = config.random_forest_model_path
 
-    xgboost_model = get_data_from_s3(config.bucket_name, xgboost_model_path)
-    random_forest_model = get_data_from_s3(config.bucket_name, random_forest_model_path)
+    xgboost_model = joblib.load(get_data_from_s3(config.bucket_name, xgboost_model_path))
+    random_forest_model = joblib.load(get_data_from_s3(config.bucket_name, random_forest_model_path))
 
     preprocessed_data = preprocessed_data.drop(
         ['name',
