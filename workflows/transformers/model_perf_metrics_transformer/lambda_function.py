@@ -38,17 +38,17 @@ def lambda_handler(event, context):
     start_time = pd.Timestamp.now()
     logger.info("The model performance metrics transformer lambda function has started.")
 
-    workflow_start_date = event['workflowStart']['today']
+    workflow_start_date = event['workflowStartDate']
 
     model_metrics_dict = build_combined_metrics_by_models_json(
-        get_aggregated_metrics_by_models_df(collection, config.aggregation_pipeline,
-                                            config.aggregated_metrics_by_models_column_names),
+
         build_todays_metrics_by_models_df(
-            event['predictions']['Payload']['predictionsFilePath'],
-            event['labellingTransformer']['Payload']['pathLabelledData'],
-            workflow_start_date,
-            config.bucket_name
-        )
+            event['predictionsPaths'], event['labelledDataPath'],
+            workflow_start_date, config.bucket_name
+        ),
+        get_aggregated_metrics_by_models_df(collection, config.aggregation_pipeline,
+                                            config.aggregated_metrics_by_models_column_names)
+
     )
 
     model_perf_metrics_path = build_s3_path(
