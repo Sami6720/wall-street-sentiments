@@ -211,8 +211,8 @@ def update_aggregated_columns_with_todays_data(metrics_by_models):
     :rtype: pd.DataFrame
     """
 
-    metrics_by_models['historic_buy_predictions_profit'] += metrics_by_models['net_buy_profits']
-    metrics_by_models['historic_not_buy_predictions_save'] += metrics_by_models['not_buy_saves']
+    metrics_by_models['historic_buy_predictions_profit'] += metrics_by_models['buy_predictions_profit']
+    metrics_by_models['historic_not_buy_predictions_save'] += metrics_by_models['not_buy_predictions_save']
     metrics_by_models['total_good_days'] += metrics_by_models['good_day']
     metrics_by_models['total_days'] += 1
 
