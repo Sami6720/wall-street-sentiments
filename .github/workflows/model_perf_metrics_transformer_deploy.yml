@@ -1,4 +1,4 @@
-name: model_perf_metrics_transformer
+name: model_perf_metrics_transformer_deploy
 
 on:
   push:
