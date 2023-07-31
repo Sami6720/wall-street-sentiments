@@ -57,6 +57,8 @@ jobs:
           docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
           --build-context piplock=../.. \
           --build-arg BUCKET_NAME=$BUCKET_NAME \
+          --build-arg DB_CONNECTION_STRING=$DB_CONNECTION_STRING \
+          --build-arg DB_NAME=$DB_NAME \
           --build-arg MODEL_PERF_METRICS_COLLECTION_NAME=$MODEL_PERF_METRICS_COLLECTION_NAME \
           --build-arg STOCK_METRICS_COLLECTION_NAME=$STOCK_METRICS_COLLECTION_NAME \
           --build-arg PREDICTIONS_COLLECTION_NAME=$PREDICTIONS_COLLECTION_NAME \
