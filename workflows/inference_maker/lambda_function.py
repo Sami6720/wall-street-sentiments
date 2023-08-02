@@ -3,6 +3,7 @@ from cloud_interactions import get_data_from_s3, upload_data_to_s3, build_s3_pat
 from config import Config
 from logger import logger
 import pandas as pd
+import numpy as np
 
 config = Config()
 
@@ -34,6 +35,8 @@ def lambda_handler(event, context):
          ], axis=1).sort_values(
         by=['mentions'],
         ascending=False)
+
+    feature_engineered_data = feature_engineered_data.replace(to_replace=np.nan, value=0)
 
     xgboost_predictions = xgboost_model.predict(feature_engineered_data)
     random_forest_predictions = random_forest_model.predict(feature_engineered_data)
