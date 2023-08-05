@@ -19,11 +19,17 @@ class Config:
             {
                 "$group": {
                     "_id": "$model",
-                    "total_net_buy_profits": {
-                        "$sum": "$net_buy_profits"
+                    "historic_buy_predictions_profit": {
+                        "$sum": "$buy_predictions_profit"
                     },
-                    "total_not_buy_saves": {
-                        "$sum": "$not_buy_saves"
+                    "historic_not_buy_predictions_save": {
+                        "$sum": "$not_buy_predictions_save"
+                    },
+                    "historic_buy_predictions_count": {
+                        "$sum": "$buy_predictions_count"
+                    },
+                    "historic_not_buy_predictions_count": {
+                        "$sum": "$not_buy_predictions_count"
                     },
                     "total_good_days": {
                         "$sum": "$good_day"
@@ -37,5 +43,6 @@ class Config:
 
         self.aggregated_metrics_by_models_column_names = [
             'model', 'historic_buy_predictions_profit', 'historic_not_buy_predictions_save',
-            'total_good_days', 'total_days'
+            'historic_buy_predictions_count', 'historic_not_buy_predictions_count', 'total_good_days',
+            'total_days'
         ]
