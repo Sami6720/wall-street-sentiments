@@ -100,9 +100,17 @@ def build_todays_metrics_dict_for_model(predictions_and_labelled_data,
     predictions_and_labelled_data['price_change'] = (predictions_and_labelled_data['closing_price']
                                                      - predictions_and_labelled_data['opening_price'])
 
+    radom_predictions_and_labelled_data = predictions_and_labelled_data.copy()
+    radom_predictions_and_labelled_data['prediction'] = np.random.randint(
+        0, 2, size=len(radom_predictions_and_labelled_data))
+
     # -1 becuase if money was saved by model's not buy predictions, we want to show that as a positive number.
     buy_predictions_profit = calculate_todays_net_profit_or_save(predictions_and_labelled_data, BUY)
     not_buy_predictions_save = calculate_todays_net_profit_or_save(predictions_and_labelled_data, NOT_BUY) * -1
+    random_buy_predictions_profit = calculate_todays_net_profit_or_save(radom_predictions_and_labelled_data, BUY)
+    random_not_buy_predictions_save = calculate_todays_net_profit_or_save(radom_predictions_and_labelled_data,
+                                                                          NOT_BUY) * -1
+
     model = predictions_and_labelled_data['model'].iloc[0]
 
     model_metrics = {}
@@ -110,7 +118,9 @@ def build_todays_metrics_dict_for_model(predictions_and_labelled_data,
     model_metrics['model'] = model
     model_metrics['buy_predictions_profit'] = buy_predictions_profit
     model_metrics['not_buy_predictions_save'] = not_buy_predictions_save
-    model_metrics['good_day'] = 1 if not_buy_predictions_save > 0 and not_buy_predictions_save > 0 else 0
+    model_metrics['good_day'] = (1 if (not_buy_predictions_save > random_not_buy_predictions_save)
+                                 and (buy_predictions_profit > random_buy_predictions_profit)
+                                 else 0)
 
     logger.info(f"Finished executing build_todays_metrics_dict_for_model for model: {model}")
 
