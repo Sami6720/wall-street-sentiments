@@ -116,6 +116,9 @@ def build_todays_metrics_dict_for_model(predictions_and_labelled_data,
     model_metrics = {}
     model_metrics['timestamp'] = workflow_start_date
     model_metrics['model'] = model
+    model_metrics['buy_predictions_count'] = get_predicted_category_count(predictions_and_labelled_data, BUY)
+    model_metrics['not_buy_predictions_count'] = get_predicted_category_count(
+        predictions_and_labelled_data, NOT_BUY)
     model_metrics['buy_predictions_profit'] = buy_predictions_profit
     model_metrics['not_buy_predictions_save'] = not_buy_predictions_save
     model_metrics['good_day'] = (1 if (not_buy_predictions_save > random_not_buy_predictions_save)
@@ -148,6 +151,23 @@ def calculate_todays_net_profit_or_save(predictions_and_labelled_data, predictio
         [predictions_and_labelled_data['prediction'] == prediction]
         ['price_change'].sum()
     )
+
+
+def get_predicted_category_count(predictions_and_labelled_data, prediction) -> int:
+    """
+    Calculates the number of BUY or NOT_BUY predictions made by the model.
+
+    :param predictions_and_labelled_data: Dataframe containing the predictions made by the model
+        and the labelled data.
+    :type: pd.DataFrame
+    :param prediction: Prediction made by the model.
+    :type: int
+
+    :return: Number of predictions made by the model.
+    :rtype: int
+    """
+
+    return len(predictions_and_labelled_data[predictions_and_labelled_data['prediction'] == prediction])
 
 
 def build_combined_metrics_by_models_json(todays_metrics_by_models_df,
