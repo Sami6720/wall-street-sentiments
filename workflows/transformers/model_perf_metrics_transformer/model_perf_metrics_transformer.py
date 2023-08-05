@@ -191,10 +191,6 @@ def build_combined_metrics_by_models_json(todays_metrics_by_models_df,
     metrics_by_models = replace_nan_values(metrics_by_models)
     metrics_by_models = update_aggregated_columns_with_todays_data(metrics_by_models)
 
-    metrics_by_models['proportion_of_good_days'] = (metrics_by_models['total_good_days'] /
-                                                    metrics_by_models['total_days'])
-    metrics_by_models.drop(columns=['total_days'], inplace=True)  # Not needed for loading purposes.
-
     logger.info("Finished executing build_combined_metrics_by_models_json")
 
     return metrics_by_models.to_json(orient='records')
