@@ -96,6 +96,7 @@ def build_todays_metrics_dict_for_model(predictions_and_labelled_data: pd.DataFr
 
     BUY = 1
     NOT_BUY = 0
+    TOTAL_PREDICTIONS = 10
 
     predictions_and_labelled_data['price_change'] = (predictions_and_labelled_data['closing_price']
                                                      - predictions_and_labelled_data['opening_price'])
@@ -143,6 +144,9 @@ def build_todays_metrics_dict_for_model(predictions_and_labelled_data: pd.DataFr
                                                and (model_metrics['correct_buy_predictions_count']
                                                     > model_metrics['correct_random_buy_predictions_count'])
                                                else 0)
+
+    model_metrics['model_accuracy'] = (model_metrics['correct_buy_predictions_count']
+                                       + model_metrics['correct_not_buy_predictions_count']) / TOTAL_PREDICTIONS
 
     logger.info(f"Finished executing build_todays_metrics_dict_for_model for model: {model}")
 
@@ -226,12 +230,17 @@ def build_combined_metrics_by_models_json(todays_metrics_by_models_df: pd.DataFr
     :return: List containing the metrics for each model for today and the aggregated metrics for each model.
     :rtype: [jsonType]
     """
+    TOTAL_PREDICTIONS_PER_DAY = 10
 
     metrics_by_models = pd.merge(left=todays_metrics_by_models_df,
                                  right=aggregated_metrics_by_models_df, on='model', how='left')
 
     metrics_by_models = replace_nan_values(metrics_by_models)
     metrics_by_models = update_aggregated_columns_with_todays_data(metrics_by_models)
+
+    metrics_by_models['cumulative_accuracy'] = ((metrics_by_models['total_correct_buy_predictions_count']
+                                                + metrics_by_models['total_correct_not_buy_predictions_count'])
+                                                / (metrics_by_models['total_days'] * TOTAL_PREDICTIONS_PER_DAY))
 
     logger.info("Finished executing build_combined_metrics_by_models_json")
 
