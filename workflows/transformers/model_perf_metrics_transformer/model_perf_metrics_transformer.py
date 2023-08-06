@@ -116,16 +116,33 @@ def build_todays_metrics_dict_for_model(predictions_and_labelled_data: pd.DataFr
     model_metrics = {}
     model_metrics['timestamp'] = workflow_start_date
     model_metrics['model'] = model
+
     model_metrics['buy_predictions_count'] = get_predicted_category_count(predictions_and_labelled_data, BUY)
     model_metrics['not_buy_predictions_count'] = get_predicted_category_count(
         predictions_and_labelled_data, NOT_BUY)
+
+    model_metrics['correct_buy_predictions_count'] = get_correct_predictions_count(
+        predictions_and_labelled_data, BUY)
+    model_metrics['correct_not_buy_predictions_count'] = get_correct_predictions_count(
+        predictions_and_labelled_data, NOT_BUY)
+    model_metrics['correct_random_buy_predictions_count'] = get_correct_predictions_count(
+        radom_predictions_and_labelled_data, BUY)
+    model_metrics['correct_random_not_buy_predictions_count'] = get_correct_predictions_count(
+        radom_predictions_and_labelled_data, NOT_BUY)
+
     model_metrics['buy_predictions_profit'] = buy_predictions_profit
     model_metrics['not_buy_predictions_save'] = not_buy_predictions_save
     model_metrics['random_buy_predictions_profit'] = random_buy_predictions_profit
     model_metrics['random_not_buy_predictions_save'] = random_not_buy_predictions_save
-    model_metrics['good_day'] = (1 if (not_buy_predictions_save > random_not_buy_predictions_save)
-                                 and (buy_predictions_profit > random_buy_predictions_profit)
-                                 else 0)
+
+    model_metrics['good_day_money_wise'] = (1 if (not_buy_predictions_save > random_not_buy_predictions_save)
+                                            and (buy_predictions_profit > random_buy_predictions_profit)
+                                            else 0)
+    model_metrics['good_day_accuracy_wise'] = (1 if (model_metrics['correct_not_buy_predictions_count']
+                                                     > model_metrics['correct_random_not_buy_predictions_count'])
+                                               and (model_metrics['correct_buy_predictions_count']
+                                                    > model_metrics['correct_random_buy_predictions_count'])
+                                               else 0)
 
     logger.info(f"Finished executing build_todays_metrics_dict_for_model for model: {model}")
 
@@ -172,6 +189,27 @@ def get_predicted_category_count(predictions_and_labelled_data: pd.DataFrame,
     """
 
     return len(predictions_and_labelled_data[predictions_and_labelled_data['prediction'] == prediction])
+
+
+def get_correct_predictions_count(predictions_and_labelled_data: pd.DataFrame,
+                                  prediction: int) -> int:
+    """
+    Calculates the number of correct BUY or NOT_BUY predictions made by the model given the labelled data.
+
+    :param predictions_and_labelled_data: Dataframe containing the predictions made by the model
+        and the labelled data.
+    :type: pd.DataFrame
+    :param prediction: Prediction made by the model.
+    :type: int
+
+    :return: Number of correct predictions made by the model.
+    :rtype: int
+    """
+
+    return len(predictions_and_labelled_data
+               [(predictions_and_labelled_data['prediction'] == prediction)
+                & (predictions_and_labelled_data['label'] == prediction)]
+               )
 
 
 def build_combined_metrics_by_models_json(todays_metrics_by_models_df: pd.DataFrame,
@@ -243,10 +281,13 @@ def update_aggregated_columns_with_todays_data(metrics_by_models: pd.DataFrame):
 
     metrics_by_models['historic_buy_predictions_profit'] += metrics_by_models['buy_predictions_profit']
     metrics_by_models['historic_not_buy_predictions_save'] += metrics_by_models['not_buy_predictions_save']
-    metrics_by_models['total_good_days'] += metrics_by_models['good_day']
+    metrics_by_models['total_good_days_money_wise'] += metrics_by_models['good_day_money_wise']
+    metrics_by_models['total_good_days_accuracy_wise'] += metrics_by_models['good_day_accuracy_wise']
+    metrics_by_models['total_buy_predictions_count'] += metrics_by_models['buy_predictions_count']
+    metrics_by_models['total_not_buy_predictions_count'] += metrics_by_models['not_buy_predictions_count']
+    metrics_by_models['total_correct_buy_predictions_count'] += metrics_by_models['correct_buy_predictions_count']
+    metrics_by_models['total_correct_not_buy_predictions_count'] += metrics_by_models['correct_not_buy_predictions_count']
     metrics_by_models['total_days'] += 1
-    metrics_by_models['historic_buy_predictions_count'] += metrics_by_models['buy_predictions_count']
-    metrics_by_models['historic_not_buy_predictions_count'] += metrics_by_models['not_buy_predictions_count']
 
     logger.info("Finished executing update_aggregated_columns_with_todays_data")
 
