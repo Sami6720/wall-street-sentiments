@@ -1,0 +1,59 @@
+name: get_predictions_deploy
+
+on:
+  push:
+    branches:
+      - "dev-create-api-gateway-lambdas"
+    paths:
+      - "api_lambdas/get_predictions/**"
+      - ".github/workflows/get_predictions_deploy.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_GET_PREDICTIONS }}
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          PREDICTIONS_COLLECTION_NAME: ${{ secrets.PREDICTIONS_COLLECTION_NAME }}
+
+        run: |
+          # Change to the loader directory.
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to lamba-function.
+          cd api_lambdas/get_predictions
+          docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+          --build-arg DB_CONNECTION_STRING=$DB_CONNECTION_STRING \
+          --build-arg DB_NAME=$DB_NAME \
+          --build-arg PREDICTIONS_COLLECTION_NAME=$PREDICTIONS_COLLECTION_NAME \
+          --output type=docker .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
