@@ -121,6 +121,8 @@ def build_todays_metrics_dict_for_model(predictions_and_labelled_data: pd.DataFr
         predictions_and_labelled_data, NOT_BUY)
     model_metrics['buy_predictions_profit'] = buy_predictions_profit
     model_metrics['not_buy_predictions_save'] = not_buy_predictions_save
+    model_metrics['random_buy_predictions_profit'] = random_buy_predictions_profit
+    model_metrics['random_not_buy_predictions_save'] = random_not_buy_predictions_save
     model_metrics['good_day'] = (1 if (not_buy_predictions_save > random_not_buy_predictions_save)
                                  and (buy_predictions_profit > random_buy_predictions_profit)
                                  else 0)
