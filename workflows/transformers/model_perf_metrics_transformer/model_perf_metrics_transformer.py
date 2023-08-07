@@ -5,8 +5,8 @@ from logger import logger
 from cloud_interactions import get_data_from_s3
 
 
-def get_aggregated_metrics_by_models_df(collection, aggregate_pipeline,
-                                        perf_metrics_by_models_column_names) -> pd.DataFrame:
+def get_aggregated_metrics_by_models_df(collection, aggregate_pipeline: list,
+                                        perf_metrics_by_models_column_names: list) -> pd.DataFrame:
     """
     Gets the aggreagated metrics for each model from the database. The aggregation is
     done over the following features: net_buy_profits, not_buy_saves, good_day and total_days.
@@ -41,8 +41,8 @@ def get_aggregated_metrics_by_models_df(collection, aggregate_pipeline,
     return aggregated_metrics_by_models
 
 
-def build_todays_metrics_by_models_df(predictions_data_file_paths, labelled_data_file_path,
-                                      workflow_start_date, bucket_name) -> pd.DataFrame:
+def build_todays_metrics_by_models_df(predictions_data_file_paths: list, labelled_data_file_path: str,
+                                      workflow_start_date: str, bucket_name: str) -> pd.DataFrame:
     """
     Builds a dataframe containing the metrics for each model for today. The metrics are
     calculated by comparing the predictions made by the models with the labelled data.
@@ -78,8 +78,8 @@ def build_todays_metrics_by_models_df(predictions_data_file_paths, labelled_data
     return pd.DataFrame(non_aggregated_metrics_by_models)
 
 
-def build_todays_metrics_dict_for_model(predictions_and_labelled_data,
-                                        workflow_start_date) -> dict:
+def build_todays_metrics_dict_for_model(predictions_and_labelled_data: pd.DataFrame,
+                                        workflow_start_date: str) -> dict:
     """
     Builds a dictionary containing the metrics for a model for today. The metrics are
     calculated by comparing the predictions made by the model with the labelled data.
@@ -96,28 +96,65 @@ def build_todays_metrics_dict_for_model(predictions_and_labelled_data,
 
     BUY = 1
     NOT_BUY = 0
+    TOTAL_PREDICTIONS = 10
 
     predictions_and_labelled_data['price_change'] = (predictions_and_labelled_data['closing_price']
                                                      - predictions_and_labelled_data['opening_price'])
 
+    radom_predictions_and_labelled_data = predictions_and_labelled_data.copy()
+    radom_predictions_and_labelled_data['prediction'] = np.random.randint(
+        0, 2, size=len(radom_predictions_and_labelled_data))
+
     # -1 becuase if money was saved by model's not buy predictions, we want to show that as a positive number.
     buy_predictions_profit = calculate_todays_net_profit_or_save(predictions_and_labelled_data, BUY)
     not_buy_predictions_save = calculate_todays_net_profit_or_save(predictions_and_labelled_data, NOT_BUY) * -1
+    random_buy_predictions_profit = calculate_todays_net_profit_or_save(radom_predictions_and_labelled_data, BUY)
+    random_not_buy_predictions_save = calculate_todays_net_profit_or_save(radom_predictions_and_labelled_data,
+                                                                          NOT_BUY) * -1
+
     model = predictions_and_labelled_data['model'].iloc[0]
 
     model_metrics = {}
     model_metrics['timestamp'] = workflow_start_date
     model_metrics['model'] = model
+
+    model_metrics['buy_predictions_count'] = get_predicted_category_count(predictions_and_labelled_data, BUY)
+    model_metrics['not_buy_predictions_count'] = get_predicted_category_count(
+        predictions_and_labelled_data, NOT_BUY)
+
+    model_metrics['correct_buy_predictions_count'] = get_correct_predictions_count(
+        predictions_and_labelled_data, BUY)
+    model_metrics['correct_not_buy_predictions_count'] = get_correct_predictions_count(
+        predictions_and_labelled_data, NOT_BUY)
+    model_metrics['correct_random_buy_predictions_count'] = get_correct_predictions_count(
+        radom_predictions_and_labelled_data, BUY)
+    model_metrics['correct_random_not_buy_predictions_count'] = get_correct_predictions_count(
+        radom_predictions_and_labelled_data, NOT_BUY)
+
     model_metrics['buy_predictions_profit'] = buy_predictions_profit
     model_metrics['not_buy_predictions_save'] = not_buy_predictions_save
-    model_metrics['good_day'] = 1 if not_buy_predictions_save > 0 and not_buy_predictions_save > 0 else 0
+    model_metrics['random_buy_predictions_profit'] = random_buy_predictions_profit
+    model_metrics['random_not_buy_predictions_save'] = random_not_buy_predictions_save
+
+    model_metrics['good_day_money_wise'] = (1 if (not_buy_predictions_save > random_not_buy_predictions_save)
+                                            and (buy_predictions_profit > random_buy_predictions_profit)
+                                            else 0)
+    model_metrics['good_day_accuracy_wise'] = (1 if (model_metrics['correct_not_buy_predictions_count']
+                                                     > model_metrics['correct_random_not_buy_predictions_count'])
+                                               and (model_metrics['correct_buy_predictions_count']
+                                                    > model_metrics['correct_random_buy_predictions_count'])
+                                               else 0)
+
+    model_metrics['model_accuracy'] = (model_metrics['correct_buy_predictions_count']
+                                       + model_metrics['correct_not_buy_predictions_count']) / TOTAL_PREDICTIONS
 
     logger.info(f"Finished executing build_todays_metrics_dict_for_model for model: {model}")
 
     return model_metrics
 
 
-def calculate_todays_net_profit_or_save(predictions_and_labelled_data, prediction) -> float:
+def calculate_todays_net_profit_or_save(predictions_and_labelled_data: pd.DataFrame,
+                                        prediction: int) -> float:
     """
     Calculates the net profit or save for today for a model. Profit is made when the model
     predicts a buy and the price goes up. Save is made when the model predicts a not buy
@@ -140,8 +177,47 @@ def calculate_todays_net_profit_or_save(predictions_and_labelled_data, predictio
     )
 
 
-def build_combined_metrics_by_models_json(todays_metrics_by_models_df,
-                                          aggregated_metrics_by_models_df):
+def get_predicted_category_count(predictions_and_labelled_data: pd.DataFrame,
+                                 prediction: int) -> int:
+    """
+    Calculates the number of BUY or NOT_BUY predictions made by the model.
+
+    :param predictions_and_labelled_data: Dataframe containing the predictions made by the model
+        and the labelled data.
+    :type: pd.DataFrame
+    :param prediction: Prediction made by the model.
+    :type: int
+
+    :return: Number of predictions made by the model.
+    :rtype: int
+    """
+
+    return len(predictions_and_labelled_data[predictions_and_labelled_data['prediction'] == prediction])
+
+
+def get_correct_predictions_count(predictions_and_labelled_data: pd.DataFrame,
+                                  prediction: int) -> int:
+    """
+    Calculates the number of correct BUY or NOT_BUY predictions made by the model given the labelled data.
+
+    :param predictions_and_labelled_data: Dataframe containing the predictions made by the model
+        and the labelled data.
+    :type: pd.DataFrame
+    :param prediction: Prediction made by the model.
+    :type: int
+
+    :return: Number of correct predictions made by the model.
+    :rtype: int
+    """
+
+    return len(predictions_and_labelled_data
+               [(predictions_and_labelled_data['prediction'] == prediction)
+                & (predictions_and_labelled_data['label'] == prediction)]
+               )
+
+
+def build_combined_metrics_by_models_json(todays_metrics_by_models_df: pd.DataFrame,
+                                          aggregated_metrics_by_models_df: pd.DataFrame):
     """
     Builds a list containing the metrics for each model for today and the aggregated metrics for each model.
     The data is ontainted in ditctionaries for each model.
@@ -154,6 +230,7 @@ def build_combined_metrics_by_models_json(todays_metrics_by_models_df,
     :return: List containing the metrics for each model for today and the aggregated metrics for each model.
     :rtype: [jsonType]
     """
+    TOTAL_PREDICTIONS_PER_DAY = 10
 
     metrics_by_models = pd.merge(left=todays_metrics_by_models_df,
                                  right=aggregated_metrics_by_models_df, on='model', how='left')
@@ -161,16 +238,16 @@ def build_combined_metrics_by_models_json(todays_metrics_by_models_df,
     metrics_by_models = replace_nan_values(metrics_by_models)
     metrics_by_models = update_aggregated_columns_with_todays_data(metrics_by_models)
 
-    metrics_by_models['proportion_of_good_days'] = (metrics_by_models['total_good_days'] /
-                                                    metrics_by_models['total_days'])
-    metrics_by_models.drop(columns=['total_days'], inplace=True)  # Not needed for loading purposes.
+    metrics_by_models['cumulative_accuracy'] = ((metrics_by_models['total_correct_buy_predictions_count']
+                                                + metrics_by_models['total_correct_not_buy_predictions_count'])
+                                                / (metrics_by_models['total_days'] * TOTAL_PREDICTIONS_PER_DAY))
 
     logger.info("Finished executing build_combined_metrics_by_models_json")
 
     return metrics_by_models.to_json(orient='records')
 
 
-def replace_nan_values(metrics_by_models):
+def replace_nan_values(metrics_by_models: pd.DataFrame):
     """
     Replaces the null values in the metrics_by_models df with 0. A reason for this could be that a new model was
     introduced and no previous records for this model existed in the collection.
@@ -197,7 +274,7 @@ def replace_nan_values(metrics_by_models):
     return metrics_by_models
 
 
-def update_aggregated_columns_with_todays_data(metrics_by_models):
+def update_aggregated_columns_with_todays_data(metrics_by_models: pd.DataFrame):
     """
     Updates the aggregated columns with the data for today. The aggregated columns are the sum of the
     buy_predictions_profit, not_buy_predictions_save and good_day columns.
@@ -213,7 +290,12 @@ def update_aggregated_columns_with_todays_data(metrics_by_models):
 
     metrics_by_models['historic_buy_predictions_profit'] += metrics_by_models['buy_predictions_profit']
     metrics_by_models['historic_not_buy_predictions_save'] += metrics_by_models['not_buy_predictions_save']
-    metrics_by_models['total_good_days'] += metrics_by_models['good_day']
+    metrics_by_models['total_good_days_money_wise'] += metrics_by_models['good_day_money_wise']
+    metrics_by_models['total_good_days_accuracy_wise'] += metrics_by_models['good_day_accuracy_wise']
+    metrics_by_models['total_buy_predictions_count'] += metrics_by_models['buy_predictions_count']
+    metrics_by_models['total_not_buy_predictions_count'] += metrics_by_models['not_buy_predictions_count']
+    metrics_by_models['total_correct_buy_predictions_count'] += metrics_by_models['correct_buy_predictions_count']
+    metrics_by_models['total_correct_not_buy_predictions_count'] += metrics_by_models['correct_not_buy_predictions_count']
     metrics_by_models['total_days'] += 1
 
     logger.info("Finished executing update_aggregated_columns_with_todays_data")
