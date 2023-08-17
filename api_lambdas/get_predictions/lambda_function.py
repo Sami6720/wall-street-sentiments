@@ -4,6 +4,8 @@ from pymongo import DESCENDING
 
 from bson import json_util
 
+from get_predictions_helpers import update_records_with_prev_predictions, build_last_weekday_preds_dict
+
 from config import Config
 
 config = Config()
@@ -39,6 +41,9 @@ def lambda_handler(event, context):
 
         )
     )
+
+    update_records_with_prev_predictions(records,
+                                         build_last_weekday_preds_dict(last_date, collection))
 
     return {
         'statusCode': 200,
