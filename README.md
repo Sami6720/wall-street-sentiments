@@ -3,6 +3,7 @@ This repository contains the backend for [Wall Street Sentiments](https://wall-s
 
 ## 🛠 Tech stack
 The backend is built in Python with AWS providing the cloud infrastructure.
+
 #### More details
 - Data Lake: S3
 - ETL Components: AWS Lambda
@@ -12,5 +13,12 @@ The backend is built in Python with AWS providing the cloud infrastructure.
 - REST API: API Gateway
 - Image Repository: AWS ECR
 
-## ETL Architecture
+## 📁 Folders and Branches
+- The `workflows` folder contains code for the ETL components.
+- The `api_lambdas` folder contains code for the REST API lambdas.
+- The `dev-experiments-data-science` branch contains all the experimentation and exploratory notebooks.
+
+
+
+## ✏️ ETL Architecture
 ![image](https://github.com/Sami6720/wall-street-sentiments/assets/78088136/8b5276e6-c467-44af-9484-b0942967d4f6)
