@@ -16,7 +16,7 @@ The backend is built in Python with AWS providing the cloud infrastructure.
 ## 📁 Folders and Branches
 - The `workflows` folder contains code for the ETL components.
 - The `api_lambdas` folder contains code for the REST API lambdas.
-- The `dev-experiments-data-science` branch contains all the experimentation and exploratory notebooks.
+- The [`dev-experiments-data-science`](https://github.com/Sami6720/wall-street-sentiments/tree/dev-experiments-data-science) branch contains all the experimentation and exploratory notebooks.
 
 
 
