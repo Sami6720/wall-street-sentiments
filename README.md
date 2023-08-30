@@ -18,13 +18,9 @@ The backend is built in Python with AWS providing the cloud infrastructure.
 - The `api_lambdas` folder contains code for the REST API lambdas.
 - The [`dev-experiments-data-science`](https://github.com/Sami6720/wall-street-sentiments/tree/dev-experiments-data-science) branch contains all the experimentation and exploratory notebooks.
 
-
-
 ## 📐 ETL Architecture
 ![image](https://github.com/Sami6720/wall-street-sentiments/assets/78088136/8b5276e6-c467-44af-9484-b0942967d4f6)
 
 
-## ☁️ AWS Cloud Architecture
-![wss-backend-architecture (3)](https://github.com/Sami6720/wall-street-sentiments/assets/78088136/5d63804c-415e-4e92-a8a9-7191e4b324ca)
-
-
+## ☁️ Cloud Architecture
+![wss-backend-architecture (4)](https://github.com/Sami6720/wall-street-sentiments/assets/78088136/a9d383fa-b79a-41f6-8f6d-fec9d6dd1d8d)
