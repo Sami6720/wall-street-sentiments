@@ -25,6 +25,6 @@ The backend is built in Python with AWS providing the cloud infrastructure.
 
 
 ## ☁️ AWS Cloud Architecture
-![wss-backend-architecture (2)](https://github.com/Sami6720/wall-street-sentiments/assets/78088136/016d2d93-3e13-4545-ada9-4dd6d72d8a81)
+![wss-backend-architecture (3)](https://github.com/Sami6720/wall-street-sentiments/assets/78088136/5d63804c-415e-4e92-a8a9-7191e4b324ca)
 
 
