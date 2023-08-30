@@ -1,7 +1,7 @@
 # Wall Street Sentiments Backend
 This repository contains the backend for [Wall Street Sentiments](https://wall-street-sentiments-front-end.vercel.app/dashboard). It's a web app designed to predict the price direction of today's most discussed stocks on Reddit. This prediction is powered by a combination of fundamental stock information and data from Reddit on those stocks. This also includes sentiment data.
 
-## 🛠 Tech stack
+## 🛠️ Tech stack
 The backend is built in Python with AWS providing the cloud infrastructure.
 
 #### More details
@@ -20,5 +20,11 @@ The backend is built in Python with AWS providing the cloud infrastructure.
 
 
 
-## ✏️ ETL Architecture
+## 📐 ETL Architecture
 ![image](https://github.com/Sami6720/wall-street-sentiments/assets/78088136/8b5276e6-c467-44af-9484-b0942967d4f6)
+
+
+## ☁️ AWS Cloud Architecture
+![wss-backend-architecture (2)](https://github.com/Sami6720/wall-street-sentiments/assets/78088136/016d2d93-3e13-4545-ada9-4dd6d72d8a81)
+
+
