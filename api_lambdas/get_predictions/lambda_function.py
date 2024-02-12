@@ -30,7 +30,8 @@ def lambda_handler(event, context):
     """
 
     last_date = dict(collection.find_one(
-        sort=[('workflow_date', DESCENDING)]
+        {'workflow_date': {"$regex": "*2024"}},
+        sort=[('workflow_date', DESCENDING)],
     ))['workflow_date']
     
     records = list(

@@ -3,7 +3,7 @@ name: get_predictions_deploy
 on:
   push:
     branches:
-      - "dev-create-api-gateway-lambdas"
+      - "master"
     paths:
       - "api_lambdas/get_predictions/**"
       - ".github/workflows/get_predictions_deploy.yml"

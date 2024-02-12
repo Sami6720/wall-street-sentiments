@@ -3,7 +3,7 @@ name: get_stock_metrics_deploy
 on:
   push:
     branches:
-      - "dev-create-api-gateway-lambdas"
+      - "master"
     paths:
       - "api_lambdas/get_stock_metrics/**"
       - ".github/workflows/get_stock_metrics_deploy.yml"
