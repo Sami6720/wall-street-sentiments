@@ -3,7 +3,7 @@ name: get_model_perf_metrics_deploy
 on:
   push:
     branches:
-      - "master"
+      - "master-fix-sorting-issue-in-apis"
     paths:
       - "api_lambdas/get_model_perf_metrics/**"
       - ".github/workflows/get_model_perf_metrics_deploy.yml"

@@ -3,7 +3,7 @@ name: get_predictions_deploy
 on:
   push:
     branches:
-      - "master"
+      - "master-fix-sorting-issue-in-apis"
     paths:
       - "api_lambdas/get_predictions/**"
       - ".github/workflows/get_predictions_deploy.yml"
