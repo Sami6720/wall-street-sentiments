@@ -6,7 +6,7 @@ on:
       - "master"
     paths:
       - "api_lambdas/get_model_perf_metrics/**"
-      - ".github/workflows/get_model_perf_metrics.yml"
+      - ".github/workflows/get_model_perf_metrics_deploy.yml"
 
 permissions:
   contents: read
