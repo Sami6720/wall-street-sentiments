@@ -4,8 +4,6 @@ from pymongo import DESCENDING
 
 from bson import json_util
 
-from get_predictions_helpers import update_records_with_prev_predictions, build_last_weekday_preds_dict
-
 from config import Config
 
 config = Config()
@@ -30,21 +28,11 @@ def lambda_handler(event, context):
     """
 
     last_date = dict(collection.find_one(
-        {'workflow_date': {"$regex": ".*2024$"}},
-        sort=[('workflow_date', DESCENDING)],
-    ))['workflow_date']
-    
-    records = list(
-        collection.find(
-            {
-                'workflow_date': last_date
-            }
+        {'timestamp': {"$regex": ".*2024$"}},
+        sort=[('timestamp', DESCENDING)]
+    ))['timestamp']
 
-        )
-    )
-
-    update_records_with_prev_predictions(records,
-                                         build_last_weekday_preds_dict(last_date, collection))
+    records = list(collection.find({'timestamp': last_date}))
 
     return {
         'statusCode': 200,
